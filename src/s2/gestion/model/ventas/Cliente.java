@@ -2,6 +2,8 @@ package s2.gestion.model.ventas;
 
 import javax.persistence.*;
 
+import s2.gestion.model.base.Documentable;
+
 /**
  * @author Alberto
  * Modelo para los datos basicos de los clientes
@@ -9,6 +11,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "cliente")
-public class Cliente {
+public class Cliente extends Documentable{
 
 }

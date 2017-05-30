@@ -6,6 +6,7 @@ import org.openxava.annotations.*;
 
 import lombok.*;
 
+@MappedSuperclass
 public @Getter @Setter abstract class Documentable extends Identificable {
     @Lob @Basic(fetch = FetchType.LAZY) //
     @Stereotype("SIMPLE_HTML_TEXT") // 

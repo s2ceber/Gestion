@@ -11,13 +11,19 @@ import s2.gestion.model.base.*;
  * Modelo para la cabecera de los documentos de compra
  *
  */
-@Entity
-@Table(name = "documento_compra")
+@MappedSuperclass
+//@Table(name = "documento_compra")
 
 public @Getter @Setter class DocumentoCompraBase extends Documentable{
 	private Integer numero;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(foreignKey=@ForeignKey(name="fk_proveedor"))
 	private Proveedor proveedor;
 	private Date fecha;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(foreignKey=@ForeignKey(name="fk_forma_pago"))
 	private FormaPagoCompra formaPago;
 
 }

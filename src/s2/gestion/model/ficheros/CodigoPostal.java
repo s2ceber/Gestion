@@ -2,6 +2,8 @@ package s2.gestion.model.ficheros;
 
 import javax.persistence.*;
 
+import s2.gestion.model.base.Documentable;
+
 /**
  * @author Alberto
  * Modelo para los codigos postales 
@@ -9,6 +11,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "codigo_postal")
-public class CodigoPostal {
+public class CodigoPostal extends Documentable{
 
 }

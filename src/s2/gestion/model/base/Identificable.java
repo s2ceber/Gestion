@@ -5,7 +5,6 @@ import javax.persistence.*;
 import org.openxava.annotations.*;
 
 @MappedSuperclass
-
 public abstract class Identificable {
 
     @Id @Hidden @Column(unique = true, nullable = false) //
