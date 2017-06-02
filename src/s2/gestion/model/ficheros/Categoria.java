@@ -2,6 +2,8 @@ package s2.gestion.model.ficheros;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import s2.gestion.model.base.Documentable;
 
 /**
@@ -11,6 +13,6 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "categoria")
-public class Categoria extends Documentable{
-
+public @Getter @Setter class Categoria extends Documentable{
+    private String nombre;
 }

@@ -3,23 +3,36 @@
 <!DOCTYPE controllers SYSTEM "dtds/controllers.dtd">
 
 <controllers>
-    
-    <!-- Environment variable:
-    <env-var name="Gestion_DEFAULT_YEAR" value="2015"/> 
-    -->
-    
-    <!-- Session object:
-    <object name="Gestion_activeYear" class="java.lang.Integer" value="2015" 
-    	    scope="global"/>    
-    -->
-    
-    <!-- Controller:
-    <controller name="Teacher">
-    	<extends controller="Typical"/>
-    	<action name="new" icon="library-plus" keystroke="Control N"
-        	class="actions.CreateTeacher">
-    	</action>
-	</controller>    
-    -->
-    
+
+	<!-- Environment variable: <env-var name="Gestion_DEFAULT_YEAR" value="2015"/> -->
+
+	<!-- Session object: <object name="Gestion_activeYear" class="java.lang.Integer" 
+		value="2015" scope="global"/> -->
+
+	<!-- Controller: <controller name="Teacher"> <extends controller="Typical"/> 
+		<action name="new" icon="library-plus" keystroke="Control N" class="actions.CreateTeacher"> 
+		</action> </controller> -->
+	<controller name="Ejercicio">
+		<extends controller="Typical" />
+		<action name="new"
+			class="s2.gestion.actions.ficheros.CreateEjercicioAction" image="new.gif"
+			icon="library-plus" keystroke="Control N">
+		</action>
+
+	</controller>
+	<controller name="EjercicioCrear">
+		<action name="crearEjercicio"
+			class="s2.gestion.actions.ficheros.CreateEjercicioAction"></action>
+	</controller>
+
+	<controller name="Issues">
+		<extends controller="DefaultSchema" />
+		<action name="changeToCompanyA" on-init="true"
+			class="org.openxava.actions.SetDefaultSchemaAction">
+			<set property="newDefaultSchema" value="COMPANYA" />
+		</action>
+		<action name="changeToCompanyB" class="org.openxava.actions.SetDefaultSchemaAction">
+			<set property="newDefaultSchema" value="COMPANYB" />
+		</action>
+	</controller>
 </controllers>
