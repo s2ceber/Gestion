@@ -12,27 +12,18 @@
 	<!-- Controller: <controller name="Teacher"> <extends controller="Typical"/> 
 		<action name="new" icon="library-plus" keystroke="Control N" class="actions.CreateTeacher"> 
 		</action> </controller> -->
-	<controller name="Ejercicio">
-		<extends controller="Typical" />
-		<action name="new" class="s2.gestion.actions.ficheros.NewEjercicioAction"
-			image="new.gif" icon="library-plus" keystroke="Control N">
-		</action>
-		<action name="changeEjercicio"
-			class="s2.gestion.actions.ficheros.ChangeEjercicioAction" icon="library-plus">
-		</action>
-	</controller>
-	
-	<controller name="EjercicioCrear">
-		<action name="crearEjercicio" by-default="almost-always"
-			class="s2.gestion.actions.ficheros.CreateEjercicioAction"></action>
-	</controller>
-
+	<env-var name="XAVA_SEARCH_ACTION" value="TypicalGestion.search" />
 	<controller name="TypicalGestion">
 		<extends controller="Typical" />
+
+		<action name="search" mode="detail" by-default="if-possible"
+			hidden="true" class="s2.gestion.actions.SearchByViewKeyGestionAction"
+			keystroke="F8">
+		</action>
 		<action name="setEjercicio" class="s2.gestion.actions.ficheros.SetEjercicioAction"
 			hidden="true" on-init="true"></action>
 	</controller>
-	<controller name="Issues">
+	<controller name="SchemaEjercicio">
 		<extends controller="DefaultSchema" />
 		<!-- <action name="changeToCompanyA" on-init="true" -->
 		<!-- class="org.openxava.actions.SetDefaultSchemaAction"> -->
@@ -42,4 +33,38 @@
 		<!-- <set property="newDefaultSchema" value="COMPANYB" /> -->
 		<!-- </action> -->
 	</controller>
+
+	<controller name="Ejercicio">
+		<extends controller="Typical" />
+		<action name="new" class="s2.gestion.actions.ficheros.NewEjercicioAction"
+			image="new.gif" icon="library-plus" keystroke="Control N">
+		</action>
+		<action name="cambiarEjercicio"
+			class="s2.gestion.actions.ficheros.ChangeEjercicioAction" mode="detail"
+			icon="library-plus">
+		</action>
+		<action name="delete" mode="detail"
+			class="s2.gestion.actions.ficheros.GoDeleteEjercicioAction" image="delete.gif"
+			icon="delete" keystroke="Control D" />
+		<action name="deleteSelected" mode="NONE" hidden="true" />
+		<action name="deleteRow" mode="NONE" hidden="true" />
+	</controller>
+	<controller name="NewEjercicio">
+		<extends controller="Navigation" />
+
+		<action name="crearEjercicio" by-default="almost-always"
+			class="s2.gestion.actions.ficheros.CreateEjercicioAction"></action>
+	</controller>
+	<controller name="DeleteEjercicio">
+		<action name="delete" mode="detail" confirm="true"
+			class="s2.gestion.actions.ficheros.DeleteEjercicioAction">
+			<set value="false" property="deleteSchema" />
+		</action>
+		<action name="deleteSchema" mode="detail" confirm="true"
+			class="s2.gestion.actions.ficheros.DeleteEjercicioAction">
+			<set value="true" property="deleteSchema" />
+		</action>
+		<action name="cancel" class="org.openxava.actions.CancelDialogAction" />
+	</controller>
+
 </controllers>

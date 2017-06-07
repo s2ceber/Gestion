@@ -12,6 +12,8 @@ import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.NoCreate;
 import org.openxava.annotations.NoModify;
 import org.openxava.annotations.PreCreate;
+import org.openxava.annotations.PreDelete;
+import org.openxava.annotations.ReadOnly;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 import org.openxava.annotations.Views;
@@ -33,6 +35,7 @@ import s2.gestion.model.base.Documentable;
 @Tab(properties = "nombre, nota")
 @NamedQueries({ @NamedQuery(name = "Ejercicio.getAll", query = "select e from Ejercicio e") })
 public @Getter @Setter class Ejercicio extends Documentable {
+    @ReadOnly(notForViews = "newEjercicio")
     private String nombre;
 
     @Transient
@@ -44,40 +47,50 @@ public @Getter @Setter class Ejercicio extends Documentable {
 
     @Transient
     private Boolean copiarArticulos;
+    @Transient
+    private Boolean deleteSchema;
 
     @PreCreate
     public void createEjercicio() {
-
 	String schemaOrigen;
 	boolean addDatos;
 	if (copiarDe == null) {
-	    schemaOrigen="public";
-	    addDatos=false;
-	}else{
-	    schemaOrigen=copiarDe.getNombre();
-	    addDatos=true;
+	    schemaOrigen = "public";
+	    addDatos = false;
+	} else {
+	    schemaOrigen = copiarDe.getNombre();
+	    addDatos = true;
 	}
-//	String sqlQuery=String.format(sql, schemaOrigen, nombre, addDatos);
+	// String sqlQuery=String.format(sql, schemaOrigen, nombre, addDatos);
 	Query query = XPersistence.getManager()
 		.createNativeQuery("select count(*) from public.clone_schema(?1, ?2, ?3);");
 	query.setParameter(1, schemaOrigen);
 	query.setParameter(2, getNombre());
 	query.setParameter(3, addDatos);
 	query.getResultList();
-	
-	
     }
-    public void makeDefault(){
+
+    @PreDelete
+    public void deleteEjercicio() {
+	if (deleteSchema == true) {
+	    Query query = XPersistence.getManager().createNativeQuery("select count(*) from public.delete_schema(?1);");
+	    query.setParameter(1, getNombre());
+	    query.getResultList();
+	}
+    }
+
+    public void makeDefault() {
 	ContadorGlobal contador = ContadorGlobal.getDefault();
 	contador.setEjercicio(this);
 	ContadorGlobal.setDefault(contador);
     }
-    public static Ejercicio getDefault(){
+
+    public static Ejercicio getDefault() {
 	Ejercicio myEjercicio = ContadorGlobal.getDefault().getEjercicio();
-	if (myEjercicio==null){
+	if (myEjercicio == null) {
 	    throw new XavaException("noInitEjercicio");
 	}
 	return myEjercicio;
     }
-    
+
 }

@@ -9,8 +9,7 @@ public class NewEjercicioAction extends NewAction {
 	super.execute();
 	getView().setTitle("crearNuevoEjercicio");
 	getView().setViewName("newEjercicio");
-	addActions("EjercicioCrear.crearEjercicio");
-	removeActions("CRUD.save");
+	setControllers("NewEjercicio");
 	//getView().action
 	
     }
