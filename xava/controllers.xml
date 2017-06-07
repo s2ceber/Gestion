@@ -14,25 +14,32 @@
 		</action> </controller> -->
 	<controller name="Ejercicio">
 		<extends controller="Typical" />
-		<action name="new"
-			class="s2.gestion.actions.ficheros.CreateEjercicioAction" image="new.gif"
-			icon="library-plus" keystroke="Control N">
+		<action name="new" class="s2.gestion.actions.ficheros.NewEjercicioAction"
+			image="new.gif" icon="library-plus" keystroke="Control N">
 		</action>
-
+		<action name="changeEjercicio"
+			class="s2.gestion.actions.ficheros.ChangeEjercicioAction" icon="library-plus">
+		</action>
 	</controller>
+	
 	<controller name="EjercicioCrear">
-		<action name="crearEjercicio"
+		<action name="crearEjercicio" by-default="almost-always"
 			class="s2.gestion.actions.ficheros.CreateEjercicioAction"></action>
 	</controller>
 
+	<controller name="TypicalGestion">
+		<extends controller="Typical" />
+		<action name="setEjercicio" class="s2.gestion.actions.ficheros.SetEjercicioAction"
+			hidden="true" on-init="true"></action>
+	</controller>
 	<controller name="Issues">
 		<extends controller="DefaultSchema" />
-		<action name="changeToCompanyA" on-init="true"
-			class="org.openxava.actions.SetDefaultSchemaAction">
-			<set property="newDefaultSchema" value="COMPANYA" />
-		</action>
-		<action name="changeToCompanyB" class="org.openxava.actions.SetDefaultSchemaAction">
-			<set property="newDefaultSchema" value="COMPANYB" />
-		</action>
+		<!-- <action name="changeToCompanyA" on-init="true" -->
+		<!-- class="org.openxava.actions.SetDefaultSchemaAction"> -->
+		<!-- <set property="newDefaultSchema" value="COMPANYA" /> -->
+		<!-- </action> -->
+		<!-- <action name="changeToCompanyB" class="org.openxava.actions.SetDefaultSchemaAction"> -->
+		<!-- <set property="newDefaultSchema" value="COMPANYB" /> -->
+		<!-- </action> -->
 	</controller>
 </controllers>

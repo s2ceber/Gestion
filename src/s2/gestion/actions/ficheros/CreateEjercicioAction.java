@@ -1,16 +1,18 @@
 package s2.gestion.actions.ficheros;
 
-import org.openxava.actions.NewAction;
+import org.openxava.actions.SaveAction;
 
-public class CreateEjercicioAction extends NewAction {
+public class CreateEjercicioAction extends SaveAction {
 
     @Override
     public void execute() throws Exception {
-	super.execute();
-	getView().setTitle("crearNuevoEjercicio");
-	getView().setViewName("newEjercicio");
-	addActions("Ejercicio.crearEjercicio");
-	//getView().action
+	String nombre = getView().getValueString("nombre");
+	try {
+//	    Ejercicio.createEjercicio(nombre);
+	    super.execute();
+	} catch (Exception e) {
+	    addError("No se puede crear el ejercicio", nombre);
+	}
 	
     }
 
