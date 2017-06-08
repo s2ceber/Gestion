@@ -1,10 +1,14 @@
 package s2.gestion.model.compras;
 
-import java.math.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-
-import s2.gestion.model.ficheros.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Alberto
@@ -13,6 +17,8 @@ import s2.gestion.model.ficheros.*;
  */
 @Entity
 @Table(name = "albaran_compra_detalle")
-public class AlbaranCompraDetalle extends DocumentoCompraDetalleBase {
-
+public @Getter @Setter class AlbaranCompraDetalle extends DocumentoCompraDetalleBase {
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_albaranCompra"))
+    private AlbaranCompra albaranCompra;
 }

@@ -2,6 +2,8 @@ package s2.gestion.model.compras;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import s2.gestion.model.base.Documentable;
 
 /**
@@ -11,6 +13,7 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "forma_pago_compra")
-public class FormaPagoCompra extends Documentable{
-
+public @Getter @Setter class FormaPagoCompra extends Documentable{
+    private String codigo;
+    private String nombre;
 }

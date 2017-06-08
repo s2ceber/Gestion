@@ -20,7 +20,7 @@ import s2.gestion.util.NoInitializeXavaException;
  *
  */
 @Entity
-@Table(name = "contador_global")
+@Table(name = "contador_global",schema="public")
 public @Getter @Setter class ContadorGlobal extends Identificable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_ejercicio"))

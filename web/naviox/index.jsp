@@ -1,3 +1,4 @@
+<%@page import="s2.gestion.util.Util"%>
 <% Servlets.setCharacterEncoding(request, response); %>
 
 <%@include file="../xava/imports.jsp"%>
@@ -60,7 +61,7 @@ String oxVersion = org.openxava.controller.ModuleManager.getVersion();
 					<jsp:include page='signIn.jsp'/>
 					<% } else { %>
 					<div id="module_description">
-						<%=modules.getCurrentModuleDescription(request)%> 
+						<%=modules.getCurrentModuleDescription(request)%> - <%=Util.getEjercicio()%>
 						<a href="javascript:naviox.bookmark()" title="<xava:message key='<%=modules.isCurrentBookmarked()?"unbookmark_module":"bookmark_module"%>'/>">
 							<img id="bookmark" src="<%=request.getContextPath()%>/naviox/images/bookmark-<%=modules.isCurrentBookmarked()?"on":"off"%>.png"/>
 						</a>

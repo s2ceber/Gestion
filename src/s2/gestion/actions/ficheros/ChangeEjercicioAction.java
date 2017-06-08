@@ -27,5 +27,4 @@ public class ChangeEjercicioAction extends SetDefaultSchemaAction {
     public void setView(View view) {
 	this.view = view;
     }
-
 }
