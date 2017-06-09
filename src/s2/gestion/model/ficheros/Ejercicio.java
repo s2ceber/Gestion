@@ -20,6 +20,8 @@ import org.openxava.annotations.Views;
 import org.openxava.jpa.XPersistence;
 import org.openxava.util.XavaException;
 
+import com.openxava.naviox.model.User;
+
 import lombok.Getter;
 import lombok.Setter;
 import s2.gestion.model.base.Documentable;
@@ -29,7 +31,7 @@ import s2.gestion.model.base.Documentable;
  *
  */
 @Entity
-@Table(name = "ejercicio")
+@Table(name = "v_ejercicio")
 @Views({ @View(members = "nombre;nota;documentos"),
 	@View(name = "newEjercicio", members = "nombre, copiarDe; copiarArticulos") })
 @Tab(properties = "nombre, nota")
@@ -79,14 +81,14 @@ public @Getter @Setter class Ejercicio extends Documentable {
 	}
     }
 
-    public void makeDefault() {
-	ContadorGlobal contador = ContadorGlobal.getDefault();
+    public void makeDefault(User user) {
+	ContadorGlobal contador = ContadorGlobal.getDefault(user);
 	contador.setEjercicio(this);
 	ContadorGlobal.setDefault(contador);
     }
 
-    public static Ejercicio getDefault() {
-	Ejercicio myEjercicio = ContadorGlobal.getDefault().getEjercicio();
+    public static Ejercicio getDefault(User user) {
+	Ejercicio myEjercicio = ContadorGlobal.getDefault(user).getEjercicio();
 	if (myEjercicio == null) {
 	    throw new XavaException("noInitEjercicio");
 	}
