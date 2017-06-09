@@ -1,4 +1,4 @@
-package s2.gestion.actions.ficheros;
+package s2.gestion.actions.ficheros.ejercicio;
 
 import org.openxava.actions.SaveAction;
 

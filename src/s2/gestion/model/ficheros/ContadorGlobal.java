@@ -20,7 +20,7 @@ import s2.gestion.util.NoInitializeXavaException;
  *
  */
 @Entity
-@Table(name = "contador_global",schema="public")
+@Table(name = "contador_global")
 public @Getter @Setter class ContadorGlobal extends Identificable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_ejercicio"))
@@ -32,9 +32,11 @@ public @Getter @Setter class ContadorGlobal extends Identificable {
      * @return
      */
     public static ContadorGlobal getDefault() {
-	String jpql = "SELECT e from ContadorGlobal e";
-	List<ContadorGlobal> contadores = XPersistence.getManager().createQuery(jpql, ContadorGlobal.class)
-		.setMaxResults(1).getResultList();
+	String sql = "select * from public.contador_global limit 1;";
+	List<ContadorGlobal> contadores = XPersistence.getManager().createNativeQuery(sql, ContadorGlobal.class).getResultList();
+	
+//	List<ContadorGlobal> contadores = XPersistence.getManager().createQuery(jpql, ContadorGlobal.class)
+//		.setMaxResults(1).getResultList();
 	if (contadores.size() != 1) {
 	    throw new NoInitializeXavaException("noInitContadores");
 	}

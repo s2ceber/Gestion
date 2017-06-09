@@ -1,5 +1,6 @@
 package s2.gestion.model.compras;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.persistence.*;
@@ -31,4 +32,5 @@ public abstract @Getter @Setter class DocumentoCompraBase extends Documentable{
 	@DescriptionsList(descriptionProperties="codigo, nombre")
 	private FormaPagoCompra formaPago;
 
+	private BigDecimal dto;
 }

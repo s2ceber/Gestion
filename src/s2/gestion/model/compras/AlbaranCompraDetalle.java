@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.openxava.annotations.View;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +19,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "albaran_compra_detalle")
+@View(members="articulo, codigo,nombre, precio;unidades, importe, dto1, dto2, dto3, dto4; total ")
 public @Getter @Setter class AlbaranCompraDetalle extends DocumentoCompraDetalleBase {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(foreignKey=@ForeignKey(name="fk_albaranCompra"))
