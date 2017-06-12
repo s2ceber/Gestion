@@ -3,8 +3,8 @@ package s2.gestion.model.ficheros;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -23,15 +23,15 @@ import s2.gestion.model.base.Identificable;
  *
  */
 @Entity
-@Table(name = "v_contador_global", indexes = @Index(name = "uk_user", columnList = "user", unique = true))
+@Table(name = "v_contador_global")
 @NamedQuery(name = "ContadorGlobal.getDefaultByUser", query = "SELECT cg FROM ContadorGlobal cg where cg.user=:user")
 public @Getter @Setter class ContadorGlobal extends Identificable {
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_ejercicio"))
     private Ejercicio ejercicio;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user"))
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="oxusers_name", foreignKey = @ForeignKey(name = "fk_users"))
     private User user;
 
     /**
