@@ -3,7 +3,6 @@ package s2.gestion.actions;
 import java.util.Map;
 
 import org.openxava.actions.SearchByViewKeyAction;
-import org.openxava.view.View;
 
 import s2.gestion.model.ficheros.Ejercicio;
 
@@ -24,8 +23,4 @@ public class SearchByViewKeyGestionAction extends SearchByViewKeyAction {
 	setControllers("Ejercicio");	
     }
     
-    private void vistaAlbaranCompra(){
-	View sectionView = getView().getSectionView(1);
-
-    }
 }

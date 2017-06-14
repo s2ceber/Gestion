@@ -16,6 +16,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.connection.release_mode" value="after_transaction"/>
+            <property name="javax.persistence.sql-load-script-source" value="META-INF/datosGestion.sql"/>
         </properties>
     </persistence-unit>    
         

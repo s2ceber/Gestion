@@ -2,6 +2,8 @@ package s2.gestion.model.ventas;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import s2.gestion.model.base.Documentable;
 
 /**
@@ -11,6 +13,14 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "contacto_cliente")
-public class ContactoCliente extends Documentable{
+public @Getter @Setter class ContactoCliente extends Documentable{
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Cliente cliente;
+    
+    private String nombre;
+    
+    private String telefono;
+    
+    private String email;
 
 }
