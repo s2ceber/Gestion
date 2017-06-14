@@ -11,6 +11,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "prevision_factura_compra")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class PrevisionFacturaCompra extends Documentable {
 
 }

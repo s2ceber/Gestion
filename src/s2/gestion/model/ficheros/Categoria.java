@@ -13,6 +13,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "categoria")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public @Getter @Setter class Categoria extends Documentable{
     private String nombre;
 }

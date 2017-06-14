@@ -32,6 +32,7 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "v_ejercicio")
+
 @Views({ @View(members = "nombre;nota;documentos"),
 	@View(name = "newEjercicio", members = "nombre, copiarDe; copiarArticulos") })
 @Tab(properties = "nombre, nota")

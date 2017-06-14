@@ -13,6 +13,8 @@ import s2.gestion.model.ficheros.*;
  */
 @Entity
 @Table(name = "presupuesto_compra_detalle")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class PresupuestoCompraDetalle extends DocumentoCompraDetalleBase{
 
 

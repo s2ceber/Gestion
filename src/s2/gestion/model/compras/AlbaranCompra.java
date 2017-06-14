@@ -19,6 +19,8 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "albaran_compra")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 @View(members="numero, fecha, proveedor, formaPago;articulos{albaranCompraDetalles} otrosDatos{documentos;nota}")
 public @Getter @Setter class AlbaranCompra extends DocumentoCompraBase {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="albaranCompra")

@@ -13,6 +13,8 @@ import s2.gestion.model.compras.*;
  */
 @Entity
 @Table(name = "albaran_venta")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class AlbaranVenta extends DocumentoVentaBase{
 
 

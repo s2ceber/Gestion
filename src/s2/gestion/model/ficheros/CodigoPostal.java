@@ -11,6 +11,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "codigo_postal")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class CodigoPostal extends Documentable{
 
 }

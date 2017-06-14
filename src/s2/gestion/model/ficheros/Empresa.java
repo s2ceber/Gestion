@@ -11,6 +11,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "empresa")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class Empresa extends Documentable{
 
 }

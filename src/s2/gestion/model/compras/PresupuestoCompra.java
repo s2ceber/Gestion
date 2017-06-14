@@ -11,6 +11,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "presupuesto_compra")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public class PresupuestoCompra extends DocumentoCompraBase{
 
 

@@ -16,6 +16,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "articulo")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 @View(members="codigo, nombre, precio; nota")
 public @Getter @Setter class Articulo extends Documentable {
     private String codigo;

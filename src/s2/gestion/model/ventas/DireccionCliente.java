@@ -13,6 +13,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "direccion_cliente")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 public @Getter @Setter class DireccionCliente extends Documentable{
     @ManyToOne(fetch=FetchType.LAZY)
     private Cliente cliente;
