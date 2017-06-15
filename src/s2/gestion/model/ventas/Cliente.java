@@ -28,7 +28,9 @@ import s2.gestion.model.base.Documentable;
 @Table(name = "cliente")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_cliente")
-@Views({ @View(members = "nombre, nif, contactos{contactos} direcciones{direcciones} otros{documentos; nota}") })
+@Views({ 
+    @View(members = "nombre, nif, contactos{contactos} direcciones{direcciones} otros{documentos; nota}") 
+ })
 public @Getter @Setter class Cliente extends Documentable {
     private String nombre;
     private String nif;
