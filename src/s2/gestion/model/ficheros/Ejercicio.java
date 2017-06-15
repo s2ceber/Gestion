@@ -1,12 +1,6 @@
 package s2.gestion.model.ficheros;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Query;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.NoCreate;
@@ -32,7 +26,8 @@ import s2.gestion.model.base.Documentable;
  */
 @Entity
 @Table(name = "v_ejercicio")
-
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 @Views({ @View(members = "nombre;nota;documentos"),
 	@View(name = "newEjercicio", members = "nombre, copiarDe; copiarArticulos") })
 @Tab(properties = "nombre, nota")

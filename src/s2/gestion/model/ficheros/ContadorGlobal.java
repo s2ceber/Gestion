@@ -2,13 +2,7 @@ package s2.gestion.model.ficheros;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.openxava.jpa.XPersistence;
 
@@ -24,6 +18,8 @@ import s2.gestion.model.base.Identificable;
  */
 @Entity
 @Table(name = "v_contador_global")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 @NamedQuery(name = "ContadorGlobal.getDefaultByUser", query = "SELECT cg FROM ContadorGlobal cg where cg.user=:user")
 public @Getter @Setter class ContadorGlobal extends Identificable {
     @ManyToOne(fetch=FetchType.LAZY)

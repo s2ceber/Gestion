@@ -1,7 +1,7 @@
 package s2.gestion.model.ventas;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 
 /**
  * @author Alberto

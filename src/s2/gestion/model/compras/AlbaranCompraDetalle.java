@@ -1,13 +1,7 @@
 package s2.gestion.model.compras;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.openxava.annotations.View;
+import javax.persistence.*;
+import org.openxava.annotations.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +13,8 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "albaran_compra_detalle")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="tipo_entidad")
 @View(members="articulo, codigo,nombre, precio;unidades, importe, dto1, dto2, dto3, dto4; total ")
 public @Getter @Setter class AlbaranCompraDetalle extends DocumentoCompraDetalleBase {
     @ManyToOne(fetch=FetchType.LAZY)

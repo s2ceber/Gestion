@@ -1,8 +1,6 @@
 package s2.gestion.model.ficheros;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import s2.gestion.model.base.Identificable;
