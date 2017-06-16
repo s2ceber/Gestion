@@ -23,6 +23,7 @@ import s2.gestion.model.base.Documentable;
 })
 public @Getter @Setter class DireccionCliente extends Documentable{
     @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="fk_cliente")
     private Cliente cliente;
     
     private String direccion;

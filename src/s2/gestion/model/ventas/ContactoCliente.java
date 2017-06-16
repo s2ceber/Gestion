@@ -17,6 +17,7 @@ import s2.gestion.model.base.Documentable;
 @DiscriminatorColumn(name="tipo_entidad")
 public @Getter @Setter class ContactoCliente extends Documentable{
     @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="fk_cliente")
     private Cliente cliente;
     
     private String nombre;

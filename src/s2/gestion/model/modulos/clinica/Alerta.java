@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -19,8 +20,9 @@ import s2.gestion.model.base.Documentable;
 public @Getter @Setter class Alerta extends Documentable {
     @Stereotype("DATETIME")
     private Timestamp fecha;
-    
+        
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fk_cliente")
     @DescriptionsList
     private ClienteClinica cliente;
 }
