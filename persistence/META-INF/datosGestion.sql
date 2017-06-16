@@ -14,6 +14,42 @@
 
 
 --TABLES
+	-- Table: public.oxusers
+		
+		-- DROP TABLE public.oxusers;
+		
+		CREATE TABLE public.oxusers
+		(
+		  name character varying(30) NOT NULL,
+		  active character(1) NOT NULL,
+		  authenticatewithldap character(1) NOT NULL,
+		  birthdate timestamp without time zone,
+		  creationdate timestamp without time zone,
+		  email character varying(60),
+		  failedloginattempts integer NOT NULL,
+		  familyname character varying(30),
+		  forcechangepassword character(1) NOT NULL,
+		  givenname character varying(30),
+		  jobtitle character varying(30),
+		  lastlogindate timestamp without time zone,
+		  lastpasswordchangedate timestamp without time zone,
+		  middlename character varying(30),
+		  nickname character varying(30),
+		  password character varying(41),
+		  recentpassword1 character varying(41),
+		  recentpassword2 character varying(41),
+		  recentpassword3 character varying(41),
+		  recentpassword4 character varying(41),
+		  CONSTRAINT oxusers_pkey PRIMARY KEY (name)
+		)
+		WITH (
+		  OIDS=FALSE
+		);
+		ALTER TABLE public.oxusers
+		  OWNER TO postgres;
+	-- END Table: public.oxusers
+	
+		  
   	-- Table: public.ejercicio
 
 		-- DROP TABLE public.ejercicio;
@@ -21,6 +57,7 @@
 		CREATE TABLE public.ejercicio
 		(
 		  id bigserial,
+		  versionoptblq integer,
 		  documentos character varying(32),
 		  nota text,
 		  nombre character varying(255),
@@ -31,6 +68,8 @@
 		);
 		ALTER TABLE public.ejercicio
 		  OWNER TO postgres;
+		
+--		INSERT INTO public.ejercicio(nombre) VALUES ('public');		  
 	-- End Table: public.ejercicio
 	
 	-- Table: public.contador_global
@@ -40,6 +79,7 @@
 		CREATE TABLE public.contador_global
 		(
 		  id bigserial,
+		  versionoptblq integer,		  
 		  ejercicio_id bigint,
 		  oxusers_name character varying(30),
 		  CONSTRAINT contador_global_pkey PRIMARY KEY (id),
@@ -55,6 +95,9 @@
 		);
 		ALTER TABLE public.contador_global
 		  OWNER TO postgres;
+
+--		INSERT INTO public.contador_global(ejercicio_id, oxusers_name)
+		    --select e.id,'admin' from ejercicio e where e.nombre='public';		  
 	-- END Table: public.contador_global
 	
 --END TABLES	  

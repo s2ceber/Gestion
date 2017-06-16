@@ -1,4 +1,4 @@
-package s2.gestion.model.ventas;
+package s2.gestion.model.modulos.clinica;
 
 import javax.persistence.*;
 
@@ -17,16 +17,16 @@ import s2.gestion.model.base.Documentable;
  *
  */
 @Entity
-@Table(name = "direccion_cliente")
+@Table(name = "mod_clinica_direccion_doctor")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
 @Views({ @View(members="cliente;direccion"),
     @View(name="clientes",members="direccion")
 })
-public @Getter @Setter class DireccionCliente extends Documentable{
+public @Getter @Setter class DireccionDoctor extends Documentable{
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(foreignKey=@ForeignKey(name="fk_cliente"))
-    private Cliente cliente;
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_doctor"))
+    private Doctor doctor;
     
     @Embedded
     @NoFrame

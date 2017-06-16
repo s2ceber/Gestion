@@ -11,6 +11,8 @@ public abstract class Identificable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //
     private Long id;
     
+    @Version
+    private Integer versionOptBlq;
     public Long getId() {
 	return id;
     }

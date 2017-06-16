@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,7 +23,7 @@ public @Getter @Setter class Alerta extends Documentable {
     private Timestamp fecha;
         
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fk_cliente")
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_cliente"))
     @DescriptionsList
     private ClienteClinica cliente;
 }

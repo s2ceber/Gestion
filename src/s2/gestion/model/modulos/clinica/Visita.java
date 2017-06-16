@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -34,18 +35,18 @@ public @Getter @Setter class Visita extends Documentable {
     private Timestamp fecha;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fk_estado")
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_estado"))
     @DescriptionsList
     private EstadoVisita estado;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fk_cliente")
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_cliente"))
     @DescriptionsList(descriptionProperties="nombre, nif")
     private ClienteClinica cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NoModify @NoCreate
-    @JoinColumn(name="fk_doctor")
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_doctor"))
     @DescriptionsList(descriptionProperties="nombre")
     private Doctor doctor;
     
