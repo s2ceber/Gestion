@@ -1,8 +1,10 @@
 package s2.gestion.model.compras;
 
-import java.util.*;
-
-import javax.persistence.*;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 /**
  * @author Alberto

@@ -1,12 +1,17 @@
 package s2.gestion.model.ventas;
 
-import java.math.*;
+import java.math.BigDecimal;
 
-import javax.persistence.*;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
-import lombok.*;
-import s2.gestion.model.base.*;
-import s2.gestion.model.ficheros.*;
+import lombok.Getter;
+import lombok.Setter;
+import s2.gestion.model.base.Documentable;
+import s2.gestion.model.ficheros.Articulo;
 
 /**
  * @author Alberto Modelo para los detalles de los documentos de venta

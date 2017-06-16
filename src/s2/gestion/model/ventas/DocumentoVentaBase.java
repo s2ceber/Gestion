@@ -1,17 +1,22 @@
 package s2.gestion.model.ventas;
 
-import java.util.*;
 /**
  * @author Alberto
  * Modelo para la cabecera de los documentos de venta
  *
  */
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
-import lombok.*;
-import s2.gestion.model.base.*;
-import s2.gestion.model.compras.*;
+import lombok.Getter;
+import lombok.Setter;
+import s2.gestion.model.base.Documentable;
+import s2.gestion.model.compras.FormaPagoCompra;
 
 @MappedSuperclass
 // @Table(name = "documento_venta")

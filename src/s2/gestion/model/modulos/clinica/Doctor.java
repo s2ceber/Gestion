@@ -22,7 +22,6 @@ import lombok.Setter;
 import s2.gestion.model.base.Contacto;
 import s2.gestion.model.base.Direccion;
 import s2.gestion.model.base.Documentable;
-import s2.gestion.model.ventas.ContactoCliente;
 import s2.gestion.model.ventas.DireccionCliente;
 
 @Entity

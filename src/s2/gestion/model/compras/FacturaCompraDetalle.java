@@ -1,10 +1,10 @@
 package s2.gestion.model.compras;
 
-import java.math.*;
-
-import javax.persistence.*;
-
-import s2.gestion.model.ficheros.*;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 /**
  * @author Alberto

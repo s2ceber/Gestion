@@ -3,6 +3,11 @@ package s2.gestion.util;
 import org.openxava.util.XavaException;
 
 public class NoInitializeXavaException extends XavaException {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public NoInitializeXavaException() {
 		super();
 	}

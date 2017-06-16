@@ -23,4 +23,6 @@ public @Getter @Setter class Articulo extends Documentable {
     private String codigo;
     private String nombre;
     private BigDecimal precio;
+    
+
 }
