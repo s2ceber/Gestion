@@ -13,6 +13,6 @@ public @Getter @Setter abstract class Documentable extends Identificable {
     
     @Column(columnDefinition="text") 
     @Basic(fetch = FetchType.LAZY) //
-    @Stereotype("SIMPLE_HTML_TEXT") // 
+    @Stereotype("HTML_TEXT") // 
     private String nota;
 }
