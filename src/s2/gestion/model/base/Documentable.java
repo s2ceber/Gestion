@@ -8,10 +8,11 @@ import lombok.*;
 
 @MappedSuperclass
 public @Getter @Setter abstract class Documentable extends Identificable {
-    @Lob @Basic(fetch = FetchType.LAZY) //
-    @Stereotype("SIMPLE_HTML_TEXT") // 
-    private String nota;
-
     @Stereotype("FILES") @Column(length=32)
     private String documentos;
+    
+    @Column(columnDefinition="text") 
+    @Basic(fetch = FetchType.LAZY) //
+    @Stereotype("SIMPLE_HTML_TEXT") // 
+    private String nota;
 }

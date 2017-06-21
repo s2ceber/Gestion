@@ -8,8 +8,8 @@ import lombok.Setter;
 import s2.gestion.model.base.Identificable;
 
 @Entity
-@Table(name = "mod_clinica_motivo_visita")
-public @Getter @Setter class MotivoVisita extends Identificable {
+@Table(name = "mod_clinica_tipo_cita")
+public @Getter @Setter class TipoCita extends Identificable {
     private String nombre;
     private String descripcion;
 }

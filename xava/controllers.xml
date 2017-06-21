@@ -74,4 +74,8 @@
 		<action name="addArticulo" image="create_new.gif" icon="table-row-plus-after" keystroke="F4"
 			class="org.openxava.actions.GoAddElementsToCollectionAction"><set value="albaranCompraDetalles" property="viewObject"/> </action>
 	</controller>
+	
+	<controller name="CitasDoctor">
+		<action name="citasHoy" class="s2.gestion.actions.modulos.clinica.CitasHoyAction"></action>
+	</controller>
 </controllers>

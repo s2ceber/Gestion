@@ -3,24 +3,24 @@ package s2.gestion.actions.modulos.clinica;
 import org.openxava.actions.OnChangePropertyBaseAction;
 import org.openxava.jpa.XPersistence;
 
-import s2.gestion.model.modulos.clinica.MotivoVisita;
+import s2.gestion.model.modulos.clinica.TipoCita;
 /**
  * Añade un motivo de visita a motivo
  * @author progr
  *
  */
-public class OnChangeMotivoVisita extends OnChangePropertyBaseAction {
+public class OnChangeTipoCita extends OnChangePropertyBaseAction {
 
     @Override
     public void execute() throws Exception {
-	Long motivoVisitaId = (Long) getView().getValue("motivoVisita.id");
-	if (motivoVisitaId==null) return;
+	Long tipoCitaId = (Long) getView().getValue("tipo.id");
+	if (tipoCitaId==null) return;
 	
-	MotivoVisita motivoVisita = XPersistence.getManager().find(MotivoVisita.class, motivoVisitaId);
+	TipoCita tipoCita = XPersistence.getManager().find(TipoCita.class, tipoCitaId);
 	
 	String motivo = getView().getValueString("motivo");
 	//String carriageReturn = System.getProperty("line.separator");
-	motivo=motivoVisita.getNombre()+motivo;
+	motivo=tipoCita.getNombre()+motivo;
 	getView().setValue("motivo", motivo);
 	
     }
