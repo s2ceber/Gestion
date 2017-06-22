@@ -7,10 +7,17 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import s2.gestion.model.base.Identificable;
 
 @Entity
 @Table(name = "mod_clinica_pregunta_cliente")
-public @Getter @Setter class PreguntaCliente extends Pregunta {
+public @Getter @Setter class PreguntaCliente extends Identificable {
     @ManyToOne(fetch=FetchType.LAZY)
-    private CuestionarioCliente cuestionario;
+    private CuestionarioCliente cuestionarioCliente;
+
+    private String pregunta;
+    
+    private Boolean respuesta;
+    
+    private String observacion;
 }

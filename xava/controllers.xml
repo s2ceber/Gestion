@@ -71,11 +71,19 @@
 
 	<controller name="AlbaranCompra">
 		<extends controller="Typical" />
-		<action name="addArticulo" image="create_new.gif" icon="table-row-plus-after" keystroke="F4"
-			class="org.openxava.actions.GoAddElementsToCollectionAction"><set value="albaranCompraDetalles" property="viewObject"/> </action>
+		<action name="addArticulo" image="create_new.gif" icon="table-row-plus-after"
+			keystroke="F4" class="org.openxava.actions.GoAddElementsToCollectionAction">
+			<set value="albaranCompraDetalles" property="viewObject" />
+		</action>
 	</controller>
-	
+
 	<controller name="CitasDoctor">
-		<action name="citasHoy" class="s2.gestion.actions.modulos.clinica.CitasHoyAction"></action>
+		<action name="citasHoy"
+			class="s2.gestion.actions.modulos.clinica.CitasHoyAction"></action>
+	</controller>
+
+	<controller name="ClienteClinicaOpt">
+		<action name="crearCuestionario"
+			class="s2.gestion.actions.modulos.clinica.CrearCuestionarioAction"></action>
 	</controller>
 </controllers>

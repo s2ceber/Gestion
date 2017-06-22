@@ -10,12 +10,12 @@ import lombok.Setter;
 import s2.gestion.model.base.Identificable;
 
 @Entity
-@Table(name = "mod_clinica_pregunta")
-public @Getter @Setter class Pregunta extends Identificable {
+@Table(name = "mod_clinica_plantilla_pregunta")
+public @Getter @Setter class PlantillaPregunta extends Identificable {
     @ManyToOne(fetch=FetchType.LAZY)
-    private Cuestionario cuestionario;
+    private PlantillaCuestionario plantillaCuestionario;
     
-    private String pregunta;
+    private String texto;
     
     private Boolean respuesta;
     
