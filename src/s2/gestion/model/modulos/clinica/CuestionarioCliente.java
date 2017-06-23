@@ -36,7 +36,6 @@ public @Getter @Setter class CuestionarioCliente extends Documentable {
     }
 
     public CuestionarioCliente() {
-	// TODO Auto-generated constructor stub
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,12 +52,13 @@ public @Getter @Setter class CuestionarioCliente extends Documentable {
     @ListProperties("pregunta, respuesta, observacion")
     private List<PreguntaCliente> preguntaClientes;
 
-    public void addPregunta(PreguntaCliente pregunta){
-	if (preguntaClientes==null){
-	    preguntaClientes=new ArrayList<>();
+    public void addPregunta(PreguntaCliente pregunta) {
+	if (preguntaClientes == null) {
+	    preguntaClientes = new ArrayList<>();
 	}
 	preguntaClientes.add(pregunta);
     }
+
     public void addPregunta(String pregunta, Boolean respuesta, String observacion) {
 	PreguntaCliente pc = new PreguntaCliente();
 	pc.setCuestionarioCliente(this);
