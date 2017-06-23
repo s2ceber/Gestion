@@ -12,6 +12,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
+import org.openxava.annotations.Condition;
 import org.openxava.annotations.ListAction;
 import org.openxava.annotations.ListProperties;
 import org.openxava.annotations.NoFrame;
