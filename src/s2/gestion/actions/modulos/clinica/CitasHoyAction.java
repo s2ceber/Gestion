@@ -1,29 +1,50 @@
 package s2.gestion.actions.modulos.clinica;
 
-import javax.inject.Inject;
+import java.time.LocalDate;
 
-import org.openxava.actions.ViewBaseAction;
-import org.openxava.tab.Tab;
+import org.openxava.actions.TabBaseAction;
+import org.openxava.view.View;
 
-public class CitasHoyAction extends ViewBaseAction  {
-    @Inject 
-    private Tab tab;
-    
-    private String viewObject;
-    
+public class CitasHoyAction extends TabBaseAction {
+    private Boolean soloHoy;
+
     @Override
     public void execute() throws Exception {
-	//tab.setConditionValue("estado", 1);
-	getView().getSubview("citas").getCollectionTab().setConditionValue("motivo", "tttt");
-	getView().getSubview("citas").refreshCollections();
+	View view = getTab().getCollectionView();
+		
+	removeActions(view);
 	
+	String baseCondition;
+	if (soloHoy) {
+	    baseCondition=getConditionCitasHoy();
+	    view.addListAction("CitasDoctor.citasTodas");
+	} else {
+	    baseCondition="${doctor.id}=?";
+	    view.addListAction("CitasDoctor.citasHoy");
+	}
+	
+	getTab().setBaseCondition(baseCondition);
+	view.getRoot().refreshCollections();
     }
 
-    public String getViewObject() {
-	return viewObject;
+    private void removeActions(View view) {
+	view.removeListAction("CitasDoctor.citasHoy");
+	view.removeListAction("CitasDoctor.citasTodas");
     }
 
-    public void setViewObject(String viewObject) {
-	this.viewObject = viewObject;
+    private String getConditionCitasHoy() {
+	String hoy = LocalDate.now().toString();
+	String manana = LocalDate.now().plusDays(1).toString();
+	String baseCondition = "${doctor.id}=? and ${fecha} >='" + hoy + "' and ${fecha}<'" + manana + "'";
+	return baseCondition;
     }
+
+    public Boolean getSoloHoy() {
+	return soloHoy;
+    }
+
+    public void setSoloHoy(Boolean soloHoy) {
+	this.soloHoy = soloHoy;
+    }
+
 }

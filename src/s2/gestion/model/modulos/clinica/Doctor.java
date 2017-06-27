@@ -8,11 +8,11 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
-import org.openxava.annotations.Condition;
 import org.openxava.annotations.ListAction;
 import org.openxava.annotations.ListProperties;
 import org.openxava.annotations.NoFrame;
@@ -56,7 +56,7 @@ public @Getter @Setter class Doctor extends Documentable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor",cascade=CascadeType.REMOVE)
     //@AsEmbedded
-    //@OrderBy("fecha desc")
+    @OrderBy("fecha desc")
     @ListAction(value="CitasDoctor.citasHoy")
     @ListProperties(value="fecha, cliente.nombre, estado.nombre, motivo, tratamiento")
     private Collection<Cita> citas;

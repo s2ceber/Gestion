@@ -79,11 +79,36 @@
 
 	<controller name="CitasDoctor">
 		<action name="citasHoy"
-			class="s2.gestion.actions.modulos.clinica.CitasHoyAction"></action>
+			class="s2.gestion.actions.modulos.clinica.CitasHoyAction">
+			<set value="true" property="soloHoy" />
+		</action>
+		<action name="citasTodas"
+			class="s2.gestion.actions.modulos.clinica.CitasHoyAction">
+			<set value="false" property="soloHoy" />
+		</action>
 	</controller>
 
 	<controller name="ClienteClinicaOpt">
 		<action name="crearCuestionario"
 			class="s2.gestion.actions.modulos.clinica.CrearCuestionarioAction"></action>
+	</controller>
+
+	<controller name="Cita">
+		<extends controller="Typical" />
+		<subcontroller controller="FiltroCita" mode="list" />
+	</controller>
+	<controller name="FiltroCita">
+		<action name="todas"
+			class="s2.gestion.actions.modulos.clinica.FiltroCitaAction">
+			<set value="TODAS" property="tipoFiltro" />
+		</action>
+		<action name="hoy"
+			class="s2.gestion.actions.modulos.clinica.FiltroCitaAction">
+			<set value="HOY" property="tipoFiltro" />
+		</action>
+		<action name="pendientes"
+			class="s2.gestion.actions.modulos.clinica.FiltroCitaAction">
+			<set value="PENDIENTES" property="tipoFiltro" />
+		</action>
 	</controller>
 </controllers>
