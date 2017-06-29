@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListAction;
 import org.openxava.annotations.ListProperties;
+import org.openxava.annotations.NewAction;
 import org.openxava.annotations.NoFrame;
 import org.openxava.annotations.ReferenceView;
 import org.openxava.annotations.View;
@@ -55,10 +56,10 @@ public @Getter @Setter class Doctor extends Documentable {
     private List<DireccionDoctor> direcciones;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor",cascade=CascadeType.REMOVE)
-    //@AsEmbedded
     @OrderBy("fecha desc")
     @ListAction(value="CitasDoctor.citasHoy")
-    @ListProperties(value="fecha, cliente.nombre, estado.nombre, motivo, tratamiento")
+    @NewAction(value="CitasDoctor.new")
+//    @ListProperties(value="fecha, cliente.nombre, estado.nombre, motivo, tratamiento")
     private Collection<Cita> citas;
 
 }

@@ -21,8 +21,7 @@ public class FiltroCitaAction extends TabBaseAction {
 	    getTab().setTitleVisible(true);
 	    getTab().setTitle("CitasParaHoy");
 		String hoy = LocalDate.now().toString();
-		String manana = LocalDate.now().plusDays(1).toString();
-		String baseCondition = "${fecha} >='" + hoy + "' and ${fecha}<'" + manana + "'";
+		String baseCondition = "${fecha} >='" + hoy + "'";
 		getTab().setBaseCondition(baseCondition);
 	   // getTab().setConditionValue("fecha", Timestamp.valueOf(LocalDateTime.now()));
 	    //getTab().setConditionValue("fecha", "23/06/2017");

@@ -86,6 +86,8 @@
 			class="s2.gestion.actions.modulos.clinica.CitasHoyAction">
 			<set value="false" property="soloHoy" />
 		</action>
+		<action name="new" image="create_new.gif" icon="library-plus"
+			keystroke="Control Alt N" class="org.openxava.actions.CreateNewElementInCollectionAction" />
 	</controller>
 
 	<controller name="ClienteClinicaOpt">

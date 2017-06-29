@@ -1,7 +1,7 @@
 package s2.gestion.model.modulos.clinica;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -39,7 +39,7 @@ public @Getter @Setter class ClienteClinica extends Cliente {
     @Action(value = "ClienteClinicaOpt.crearCuestionario")
     private PlantillaCuestionario cuestionarioBase;
 
-    private Timestamp fechaCuestionario;
+    private Date fechaCuestionario;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "clienteClinica", cascade = CascadeType.ALL)
     @OrderColumn

@@ -10,6 +10,7 @@ public class CitasHoyAction extends TabBaseAction {
 
     @Override
     public void execute() throws Exception {
+		
 	View view = getTab().getCollectionView();
 		
 	removeActions(view);
@@ -34,8 +35,7 @@ public class CitasHoyAction extends TabBaseAction {
 
     private String getConditionCitasHoy() {
 	String hoy = LocalDate.now().toString();
-	String manana = LocalDate.now().plusDays(1).toString();
-	String baseCondition = "${doctor.id}=? and ${fecha} >='" + hoy + "' and ${fecha}<'" + manana + "'";
+	String baseCondition = "${doctor.id}=? and ${fecha} ='" + hoy +"'";
 	return baseCondition;
     }
 
