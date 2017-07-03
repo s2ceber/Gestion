@@ -9,7 +9,7 @@ import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.OnChange;
 
 import lombok.*;
-import s2.gestion.actions.compras.OnChangeArticuloDocumentoCompraDetalleBaseAction;
+import s2.gestion.actions.ficheros.OnChangeArticuloDocumentoDetalleBaseAction;
 import s2.gestion.model.base.*;
 import s2.gestion.model.ficheros.*;
 
@@ -24,8 +24,9 @@ public abstract @Getter @Setter class DocumentoCompraDetalleBase extends Documen
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey=@ForeignKey(name="fk_articulo"))
     @DescriptionsList(descriptionProperties="codigo, nombre")
-    @OnChange(value=OnChangeArticuloDocumentoCompraDetalleBaseAction.class)
+    @OnChange(value=OnChangeArticuloDocumentoDetalleBaseAction.class)
     private Articulo articulo;
+    
     private String nombre;
     private String codigo;
     private BigDecimal unidades;

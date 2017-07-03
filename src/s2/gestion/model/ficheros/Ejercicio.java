@@ -8,6 +8,7 @@ import org.openxava.annotations.NoModify;
 import org.openxava.annotations.PreCreate;
 import org.openxava.annotations.PreDelete;
 import org.openxava.annotations.ReadOnly;
+import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 import org.openxava.annotations.Views;
@@ -18,7 +19,6 @@ import com.openxava.naviox.model.User;
 
 import lombok.Getter;
 import lombok.Setter;
-import s2.gestion.model.base.Documentable;
 
 /**
  * @author Alberto Modelo para los ejercicios contables de la empresa
@@ -32,9 +32,21 @@ import s2.gestion.model.base.Documentable;
 	@View(name = "newEjercicio", members = "nombre, copiarDe; copiarArticulos") })
 @Tab(properties = "nombre, nota")
 @NamedQueries({ @NamedQuery(name = "Ejercicio.getAll", query = "select e from Ejercicio e") })
-public @Getter @Setter class Ejercicio extends Documentable {
+public @Getter @Setter class Ejercicio {
+    @Id @Column(length=40)
     @ReadOnly(notForViews = "newEjercicio")
     private String nombre;
+    
+    @Version
+    private Integer versionOptBlq;
+    
+    @Stereotype("FILES") @Column(length=32)
+    private String documentos;
+    
+    @Column(columnDefinition="text") 
+    @Basic(fetch = FetchType.LAZY) //
+    @Stereotype("SIMPLE_HTML_TEXT") // 
+    private String nota;    
 
     @Transient
     @ManyToOne

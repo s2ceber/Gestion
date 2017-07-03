@@ -18,6 +18,6 @@ import lombok.Setter;
 @View(members="articulo, codigo,nombre, precio;unidades, importe, dto1, dto2, dto3, dto4; total ")
 public @Getter @Setter class AlbaranCompraDetalle extends DocumentoCompraDetalleBase {
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(foreignKey=@ForeignKey(name="fk_albaranCompra"))
+    @JoinColumn(foreignKey=@ForeignKey(name="fk_albaran_compra"))
     private AlbaranCompra albaranCompra;
 }

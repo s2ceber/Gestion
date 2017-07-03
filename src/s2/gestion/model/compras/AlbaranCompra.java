@@ -1,13 +1,18 @@
 package s2.gestion.model.compras;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
-import org.openxava.annotations.NewAction;
 import org.openxava.annotations.View;
 
 import lombok.Getter;
@@ -26,7 +31,6 @@ public @Getter @Setter class AlbaranCompra extends DocumentoCompraBase {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="albaranCompra")
     @ListProperties("articulo, codigo, nombre,unidades, precio, importe, dto1, dto2, dto3, dto4")
     @AsEmbedded()
-    @NewAction("AlbaranCompra.addArticulo")
     private List<AlbaranCompraDetalle> albaranCompraDetalles;
 
     public BigDecimal getTotal(){

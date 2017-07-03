@@ -56,12 +56,11 @@
 		
 		CREATE TABLE public.ejercicio
 		(
-		  id bigserial,
+		  nombre character varying(40) NOT NULL,
 		  versionoptblq integer,
 		  documentos character varying(32),
 		  nota text,
-		  nombre character varying(255),
-		  CONSTRAINT ejercicio_pkey PRIMARY KEY (id)
+		  CONSTRAINT ejercicio_pkey PRIMARY KEY (nombre)
 		)
 		WITH (
 		  OIDS=FALSE
@@ -80,11 +79,11 @@
 		(
 		  id bigserial,
 		  versionoptblq integer,		  
-		  ejercicio_id bigint,
+		  ejercicio_nombre character varying(40),
 		  oxusers_name character varying(30),
 		  CONSTRAINT contador_global_pkey PRIMARY KEY (id),
-		  CONSTRAINT fk_ejercicio FOREIGN KEY (ejercicio_id)
-		      REFERENCES public.ejercicio (id) MATCH SIMPLE
+		  CONSTRAINT fk_ejercicio FOREIGN KEY (ejercicio_nombre)
+		      REFERENCES public.ejercicio (nombre) MATCH SIMPLE
 		      ON UPDATE NO ACTION ON DELETE NO ACTION,
 		  CONSTRAINT fk_users FOREIGN KEY (oxusers_name)
 		      REFERENCES public.oxusers (name) MATCH SIMPLE
@@ -370,6 +369,6 @@
 	INSERT INTO public.ejercicio(nombre)
 	    VALUES ('public');
 	    
-	INSERT INTO public.contador_global(ejercicio_id, oxusers_name)
-	    VALUES (1, 'admin');
+	INSERT INTO public.contador_global(ejercicio_nombre, oxusers_name)
+	    VALUES ('public', 'admin');
 --END DATA
