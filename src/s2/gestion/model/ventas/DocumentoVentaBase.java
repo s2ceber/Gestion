@@ -23,7 +23,12 @@ import s2.gestion.model.base.Documentable;
 // @Table(name = "documento_venta")
 public @Getter @Setter class DocumentoVentaBase extends Documentable {
     private Integer numero;
-    private String serieDocumento;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_serieDocumento"))
+    @DescriptionsList(descriptionProperties="nombre", forTabs="NONE")    
+    private SerieDocumento serieDocumento;
+    
     private Date fecha;
 
     @ManyToOne(fetch = FetchType.LAZY)
