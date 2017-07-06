@@ -7,8 +7,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import org.openxava.annotations.Hidden;
-
 import lombok.Getter;
 import lombok.Setter;
 import s2.gestion.model.base.Identificable;
@@ -27,7 +25,6 @@ public @Getter @Setter class SerieDocumento extends Identificable{
     
     private String descripcion;
     
-    @Hidden
     private Integer numero;
 
     @PrePersist

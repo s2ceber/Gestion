@@ -1,16 +1,4 @@
---DATABASE
-	-- Database: gestion
-	
-	-- DROP DATABASE gestion;
-	
-	CREATE DATABASE gestion
-	  WITH OWNER = postgres
-	       ENCODING = 'UTF8'
-	       TABLESPACE = pg_default
-	       LC_COLLATE = 'Spanish_Spain.1252'
-	       LC_CTYPE = 'Spanish_Spain.1252'
-	       CONNECTION LIMIT = -1;
---END DATABASE
+
 
 
 --TABLES
@@ -362,13 +350,3 @@
 -- END FUNCTIONS
 		  
 		  
---DATA
-	INSERT INTO oxusers	(name, active, authenticatewithldap, birthdate, creationdate, email, failedloginattempts, familyname, forcechangepassword, givenname, jobtitle, lastlogindate, lastpasswordchangedate, middlename, nickname, password, recentpassword1, recentpassword2, recentpassword3, recentpassword4) 
-		VALUES 	('admin', 'Y', 'N', NULL, '2017-06-14 17:55:25.662', NULL, 0, NULL, 'N', NULL, NULL, NULL, '2017-06-14 17:55:25.661', NULL, NULL, '-2fcc1dd51cb7514a99f03debf513ca7af3b25669', NULL, NULL, NULL, NULL);
-
-	INSERT INTO public.ejercicio(nombre)
-	    VALUES ('public');
-	    
-	INSERT INTO public.contador_global(ejercicio_nombre, oxusers_name)
-	    VALUES ('public', 'admin');
---END DATA

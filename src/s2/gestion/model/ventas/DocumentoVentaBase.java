@@ -15,8 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.Stereotype;
+import org.openxava.calculators.CurrentDateCalculator;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +35,7 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     @DescriptionsList(descriptionProperties="nombre", forTabs="NONE")    
     private SerieDocumento serieDocumento;
     
+    @DefaultValueCalculator(value=CurrentDateCalculator.class)
     private Date fecha;
 
     @ManyToOne(fetch = FetchType.LAZY)

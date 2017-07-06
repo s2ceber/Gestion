@@ -23,7 +23,7 @@ import lombok.Setter;
 @Table(name = "factura_venta_detalle")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_entidad")
-@View(members = "articulo, codigo,nombre, precio;unidades, dto1, dto2, dto3, dto4; importe ")
+@View(members = "articulo, codigo,nombre, precio;unidades, dto1, dto2, dto3, dto4; totalConIva ")
 public @Getter @Setter class FacturaVentaDetalle extends DocumentoVentaDetalleBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_factura_venta"))
