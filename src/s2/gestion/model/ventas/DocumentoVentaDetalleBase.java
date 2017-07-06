@@ -2,12 +2,14 @@ package s2.gestion.model.ventas;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Basic;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.Formula;
 import org.openxava.annotations.Depends;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.OnChange;
@@ -15,6 +17,7 @@ import org.openxava.annotations.Stereotype;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.AccessLevel;
 import s2.gestion.actions.ficheros.OnChangeArticuloDocumentoDetalleBaseAction;
 import s2.gestion.model.base.Documentable;
 import s2.gestion.model.ficheros.Articulo;
@@ -44,7 +47,19 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     private BigDecimal dto2;
     private BigDecimal dto3;
     private BigDecimal dto4;
+    
+    @Formula("precio*unidades")
+    @Stereotype("MONEY")
+    @Setter(AccessLevel.NONE)
+    @Basic(fetch=FetchType.LAZY)    
+    private BigDecimal total;
 
+    @Formula("precio*unidades*coalesce(dto1,0)")
+    @Stereotype("MONEY")
+    @Setter(AccessLevel.NONE)
+    @Basic(fetch=FetchType.LAZY)
+    private BigDecimal importeDto1;
+    
     public void setArticulo(Articulo articulo) {
 	if (articulo != null) {
 	    setNombre(articulo.getNombre());
@@ -64,23 +79,31 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
 	
 	return getTotal().subtract(d1).subtract(d2).subtract(d3).subtract(d4);
     }
-
+    
     @Stereotype("MONEY")
-    public BigDecimal getTotal() {
-	BigDecimal multiply;
+    public BigDecimal getImporteIva() {
 	try {
-	    multiply = unidades.multiply(precio);
+	    return getImporte().multiply(getTipoIva());
 	} catch (Exception e) {
-	    multiply = BigDecimal.ZERO;
+	    return BigDecimal.ZERO;
 	}
-	return multiply;
     }
+
+//    public BigDecimal getTotal() {
+//	BigDecimal multiply;
+//	try {
+//	    multiply = unidades.multiply(precio);
+//	} catch (Exception e) {
+//	    multiply = BigDecimal.ZERO;
+//	}
+//	return multiply;
+//    }
 
     @Stereotype("MONEY")
     @Depends("unidades, precio, tipoIva")
     public BigDecimal getTotalConIva() {
 	try {
-	    return getImporte().add(getImporte().multiply(getTipoIva()));
+	    return getImporte().add(getImporteIva());
 	} catch (Exception e) {
 	    return BigDecimal.ZERO;
 	}

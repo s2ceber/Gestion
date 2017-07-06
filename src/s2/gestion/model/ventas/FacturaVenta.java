@@ -1,6 +1,7 @@
 package s2.gestion.model.ventas;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,12 +16,8 @@ import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
-import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
-
-import lombok.Getter;
-import lombok.Setter;
 
 
 /**
@@ -32,37 +29,43 @@ import lombok.Setter;
 @Table(name = "factura_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
-@View(members="serieDocumento, numero, fecha, cliente, formaPago;articulos{facturaVentaDetalles} otrosDatos{documentos;nota}")
+@View(members="serieDocumento, numero, fecha, cliente, formaPago;articulos{lineasDetalles} impuestos{ivas}otrosDatos{documentos;nota}")
 @Tab(properties="serieDocumento.nombre, numero, fecha, cliente.nombre, cliente.nif, total, importeIva, totalConIva")
-public @Getter @Setter class FacturaVenta extends DocumentoVentaBase{
+public class FacturaVenta extends DocumentoVentaBase<FacturaVentaDetalle>{
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="facturaVenta", cascade = CascadeType.REMOVE)
     @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importe[facturaVenta.total, facturaVenta.importeIva, facturaVenta.totalConIva]")
     @AsEmbedded()
     @OrderColumn
-    private List<FacturaVentaDetalle> facturaVentaDetalles;
+    private List<FacturaVentaDetalle> lineasDetalles;
 
-    //@Depends("facturaVentaDetalles")
-    @Stereotype("MONEY")
-    public BigDecimal getTotal(){
-	BigDecimal total=BigDecimal.ZERO;
-	for (FacturaVentaDetalle facturaVentaDetalle : facturaVentaDetalles) {
-	    total=total.add(facturaVentaDetalle.getTotal());
-	}
-	return total;
-    }
     
-    @Stereotype("MONEY")
-    public BigDecimal getTotalConIva(){
-	BigDecimal total=BigDecimal.ZERO;
-	for (FacturaVentaDetalle facturaVentaDetalle : facturaVentaDetalles) {
-	    total=total.add(facturaVentaDetalle.getTotalConIva());
+    public Collection<Impuesto> getIvas(){
+	Collection<Impuesto> impuestos=new ArrayList<>();
+	for (FacturaVentaDetalle facturaVentaDetalle : getLineasDetalles()) {
+	    boolean existe=false;
+	    for(Impuesto impuesto:impuestos){
+		if (facturaVentaDetalle.getTipoIva().compareTo(impuesto.getTipo())==0){
+		    existe=true;
+		    impuesto.setImporte(impuesto.getImporte().add(facturaVentaDetalle.getImporteIva()));
+		    break;
+		}
+	    }
+	    if (!existe){
+		Impuesto impuesto=new Impuesto();
+		impuesto.setTipo(facturaVentaDetalle.getTipoIva());
+		impuesto.setImporte(facturaVentaDetalle.getImporteIva());
+		impuestos.add(impuesto);
+	    }
 	}
-	return total;
+	return impuestos;
     }
-    
-    @Stereotype("MONEY")
-    public BigDecimal getImporteIva(){
-	return getTotalConIva().subtract(getTotal());
+    @Override
+    public List<FacturaVentaDetalle> getLineasDetalles() {
+        return lineasDetalles;
+    }
+    @Override
+    public void setLineasDetalles(List<FacturaVentaDetalle> lineasDetalles) {
+        this.lineasDetalles = lineasDetalles;
     }
 }
