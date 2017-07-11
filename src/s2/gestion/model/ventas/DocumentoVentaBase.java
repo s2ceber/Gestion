@@ -44,7 +44,7 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_forma_pago"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_forma_pago"), columnDefinition="UUID")
     @DescriptionsList(descriptionProperties="codigo, nombre", forTabs="NONE")    
     private FormaPagoVenta formaPago;
 
