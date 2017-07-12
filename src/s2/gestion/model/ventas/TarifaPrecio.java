@@ -54,27 +54,28 @@ public @Getter @Setter class TarifaPrecio extends Identificable {
     }
 
     public static void createTarifas(Articulo articulo) {
-	List<TarifaVenta> tarifas = TarifaVenta.getAll();
+	List<TarifaVenta> tarifas = Identificable.getAll(TarifaVenta.class);
 	String JPQL = "from TarifaPrecio tp where tp.articulo=:articulo";
 	List<TarifaPrecio> tarifaPreciosBD = XPersistence.getManager().createQuery(JPQL, TarifaPrecio.class)
 		.setParameter("articulo", articulo).getResultList();
 	if (tarifaPreciosBD.isEmpty()) {
-	    createTarifas(articulo, tarifas);
+	    createTarifasPrecio(articulo, tarifas);
 	} else if (tarifaPreciosBD.size() != tarifas.size()) {
 	    String JPQL1 = "select tv from TarifaPrecio tp rigth join tp.tarifaVenta tv where tp.articulo=:articulo and tv.id is null";
 	    tarifas = XPersistence.getManager().createQuery(JPQL1, TarifaVenta.class).setParameter("articulo", articulo)
 		    .getResultList();
-	    createTarifas(articulo, tarifas);
+	    createTarifasPrecio(articulo, tarifas);
 	}
     }
 
-    private static void createTarifas(Articulo articulo, List<TarifaVenta> tarifas) {
+    private static void createTarifasPrecio(Articulo articulo, List<TarifaVenta> tarifas) {
 	for (TarifaVenta tarifaVenta : tarifas) {
 	    TarifaPrecio tp = new TarifaPrecio();
 	    tp.setArticulo(articulo);
 	    tp.setPrecio(BigDecimal.ZERO);
 	    tp.setTarifaVenta(tarifaVenta);
-	    XPersistence.getManager().persist(tp);
+	    articulo.getTarifaPrecios().add(tp);
 	}
+	XPersistence.getManager().persist(articulo);
     }
 }
