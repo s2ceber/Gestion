@@ -7,13 +7,17 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
+import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.ListProperties;
 import org.openxava.annotations.NoFrame;
 import org.openxava.annotations.ReferenceView;
@@ -35,7 +39,7 @@ import s2.gestion.model.base.Documentable;
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_cliente")
 @Views({ 
-    @View(members = "#nombre, nif; contacto; direccion; contactos{contactos} direcciones{direcciones} otros{documentos; nota}") 
+    @View(members = "#nombre, nif; contacto; direccion; tarifaVenta; contactos{contactos} direcciones{direcciones} otros{documentos; nota}") 
  })
 public @Getter @Setter class Cliente extends Documentable {
     private String nombre;
@@ -49,6 +53,11 @@ public @Getter @Setter class Cliente extends Documentable {
     @Embedded
     @NoFrame
     private Direccion direccion;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
+    @DescriptionsList(descriptionProperties = "nombre, nota")
+    private TarifaVenta tarifaVenta;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
     @AsEmbedded

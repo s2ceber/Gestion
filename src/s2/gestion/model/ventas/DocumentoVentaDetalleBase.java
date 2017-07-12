@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
 import s2.gestion.actions.ficheros.OnChangeArticuloDocumentoDetalleBaseAction;
+import s2.gestion.actions.ficheros.OnChangeTarifaDocumentoDetalleBaseAction;
 import s2.gestion.model.base.Documentable;
 import s2.gestion.model.ficheros.Articulo;
 
@@ -36,6 +37,12 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     @OnChange(value = OnChangeArticuloDocumentoDetalleBaseAction.class)
     private Articulo articulo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
+    @DescriptionsList(descriptionProperties = "nombre, nota")
+    @OnChange(value = OnChangeTarifaDocumentoDetalleBaseAction.class)
+    private TarifaVenta tarifaVenta;
+    
     private String nombre;
     private String codigo;
     private BigDecimal unidades;

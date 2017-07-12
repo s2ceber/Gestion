@@ -105,4 +105,9 @@
 			<set value="PENDIENTES" property="tipoFiltro" />
 		</action>
 	</controller>
+	<controller name="ArticuloPrecio">
+		<action name="actualizarTarifas"
+			class="s2.gestion.actions.ficheros.ActualizarTarifas">
+		</action>
+	</controller>
 </controllers>
