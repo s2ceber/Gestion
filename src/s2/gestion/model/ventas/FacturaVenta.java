@@ -29,12 +29,12 @@ import org.openxava.annotations.View;
 @Table(name = "factura_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
-@View(members="serieDocumento, numero, fecha, cliente, formaPago;articulos{lineasDetalles} impuestos{ivas}otrosDatos{documentos;nota}")
+@View(members="serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{lineasDetalles} impuestos{ivas}otrosDatos{documentos;nota}")
 @Tab(properties="serieDocumento.nombre, numero, fecha, cliente.nombre, cliente.nif, total, importeIva, totalConIva")
 public class FacturaVenta extends DocumentoVentaBase<FacturaVentaDetalle>{
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="facturaVenta", cascade = CascadeType.REMOVE)
-    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importe[facturaVenta.total, facturaVenta.importeIva, facturaVenta.totalConIva]")
+    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[facturaVenta.totalSinIva, facturaVenta.importeIva, facturaVenta.totalConIva]")
     @AsEmbedded()
     @OrderColumn
     private List<FacturaVentaDetalle> lineasDetalles;

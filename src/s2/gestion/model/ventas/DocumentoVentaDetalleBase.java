@@ -2,14 +2,12 @@ package s2.gestion.model.ventas;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Basic;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.Formula;
 import org.openxava.annotations.Depends;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.OnChange;
@@ -17,9 +15,7 @@ import org.openxava.annotations.Stereotype;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.AccessLevel;
 import s2.gestion.actions.ficheros.OnChangeArticuloDocumentoDetalleBaseAction;
-import s2.gestion.actions.ficheros.OnChangeTarifaDocumentoDetalleBaseAction;
 import s2.gestion.model.base.Documentable;
 import s2.gestion.model.ficheros.Articulo;
 
@@ -40,9 +36,9 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
     @DescriptionsList(descriptionProperties = "nombre, nota")
-    @OnChange(value = OnChangeTarifaDocumentoDetalleBaseAction.class)
     private TarifaVenta tarifaVenta;
-    
+    private Boolean ivaIncluido;
+
     private String nombre;
     private String codigo;
     private BigDecimal unidades;
@@ -54,65 +50,41 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     private BigDecimal dto2;
     private BigDecimal dto3;
     private BigDecimal dto4;
-    
-    @Formula("precio*unidades")
-    @Stereotype("MONEY")
-    @Setter(AccessLevel.NONE)
-    @Basic(fetch=FetchType.LAZY)    
-    private BigDecimal total;
 
-    @Formula("precio*unidades*coalesce(dto1,0)")
-    @Stereotype("MONEY")
-    @Setter(AccessLevel.NONE)
-    @Basic(fetch=FetchType.LAZY)
-    private BigDecimal importeDto1;
-    
-    public void setArticulo(Articulo articulo) {
-	if (articulo != null) {
-	    setNombre(articulo.getNombre());
-	    setCodigo(articulo.getCodigo());
-	    if (articulo.getTipoIva() != null)
-		setTipoIva(articulo.getTipoIva().getTipo());
-	}
-    }
+    private BigDecimal importeIva;
 
-    @Stereotype("MONEY")
-    public BigDecimal getImporte() {
+    private BigDecimal importe;
+
+    
+    public void calculo() {
+	if (getPrecio() == null)
+	    setPrecio(BigDecimal.ZERO);
+	if (getUnidades() == null)
+	    setUnidades(BigDecimal.ZERO);
+	BigDecimal subTotal = getPrecio().multiply(getUnidades());
+
+	BigDecimal d1 = dto1 == null ? BigDecimal.ZERO : subTotal.multiply(dto1);
+	BigDecimal d2 = dto2 == null ? BigDecimal.ZERO : subTotal.multiply(dto2);
+	BigDecimal d3 = dto3 == null ? BigDecimal.ZERO : subTotal.multiply(dto3);
+	BigDecimal d4 = dto4 == null ? BigDecimal.ZERO : subTotal.multiply(dto4);
+
+	subTotal.subtract(d1).subtract(d2).subtract(d3).subtract(d4);
 	
-	BigDecimal d1 = dto1 == null ? BigDecimal.ZERO : getTotal().multiply(dto1);
-	BigDecimal d2 = dto2 == null ? BigDecimal.ZERO : getTotal().multiply(dto2);
-	BigDecimal d3 = dto3 == null ? BigDecimal.ZERO : getTotal().multiply(dto3);
-	BigDecimal d4 = dto4 == null ? BigDecimal.ZERO : getTotal().multiply(dto4);
-	
-	return getTotal().subtract(d1).subtract(d2).subtract(d3).subtract(d4);
+	if (getIvaIncluido()){
+	    subTotal.divide(BigDecimal.ONE.add(getTipoIva()));
+	}
+	setImporte(subTotal);
+	setImporteIva(subTotal.multiply(getTipoIva()));
     }
     
-    @Stereotype("MONEY")
-    public BigDecimal getImporteIva() {
-	try {
-	    return getImporte().multiply(getTipoIva());
-	} catch (Exception e) {
-	    return BigDecimal.ZERO;
-	}
+    @Depends("precio, unidades")
+    public BigDecimal getImporteLinea(){
+	calculo();
+	return importe;	
     }
-
-//    public BigDecimal getTotal() {
-//	BigDecimal multiply;
-//	try {
-//	    multiply = unidades.multiply(precio);
-//	} catch (Exception e) {
-//	    multiply = BigDecimal.ZERO;
-//	}
-//	return multiply;
-//    }
-
-    @Stereotype("MONEY")
-    @Depends("unidades, precio, tipoIva")
-    public BigDecimal getTotalConIva() {
-	try {
-	    return getImporte().add(getImporteIva());
-	} catch (Exception e) {
-	    return BigDecimal.ZERO;
-	}
+    
+    public void setIvaIncluido(Boolean ivaIncluido){
+	if (ivaIncluido==null) ivaIncluido=false;
+	this.ivaIncluido=ivaIncluido;
     }
 }

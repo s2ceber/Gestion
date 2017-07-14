@@ -1,7 +1,7 @@
 package s2.gestion.model.ficheros;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
@@ -13,7 +13,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
@@ -50,8 +49,7 @@ public @Getter @Setter class Articulo extends Documentable {
       
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "articulo", cascade = CascadeType.ALL)
     @AsEmbedded
-    @OrderColumn
     @ListProperties(value="tarifaVenta.nombre, precio")
     @ListAction("ArticuloPrecio.actualizarTarifas")
-    private List<TarifaPrecio> tarifaPrecios;
+    private Collection<TarifaPrecio> tarifaPrecios;
 }

@@ -18,6 +18,7 @@ import javax.persistence.UniqueConstraint;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
+import org.openxava.annotations.Views;
 import org.openxava.jpa.XPersistence;
 
 import lombok.Getter;
@@ -30,8 +31,10 @@ import s2.gestion.model.ficheros.Articulo;
 	"tarifaventa_id" }, name = "uk_cliente_tarifaventa"))
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_entidad")
-@View(members = "nombre;documentos;nota")
-@Tab(properties = "nombre, documentos")
+@Views({ @View(members = "tarifaVenta, articulo, precio"),
+	@View(name = "articulo", members = "tarifaVenta, precio"),
+	@View(name = "tarifaVenta", members = "articulo, precio") })
+@Tab(properties = "tarifaVenta, articulo, precio")
 public @Getter @Setter class TarifaPrecio extends Identificable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_articulo"))
@@ -61,7 +64,7 @@ public @Getter @Setter class TarifaPrecio extends Identificable {
 	if (tarifaPreciosBD.isEmpty()) {
 	    createTarifasPrecio(articulo, tarifas);
 	} else if (tarifaPreciosBD.size() != tarifas.size()) {
-	    String JPQL1 = "select tv from TarifaPrecio tp rigth join tp.tarifaVenta tv where tp.articulo=:articulo and tv.id is null";
+	    String JPQL1 = "select tv from TarifaPrecio tp right join tp.tarifaVenta tv where tp.articulo=:articulo and tv.id is null";
 	    tarifas = XPersistence.getManager().createQuery(JPQL1, TarifaVenta.class).setParameter("articulo", articulo)
 		    .getResultList();
 	    createTarifasPrecio(articulo, tarifas);

@@ -17,11 +17,13 @@ import javax.persistence.MappedSuperclass;
 
 import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.DescriptionsList;
+import org.openxava.annotations.OnChange;
 import org.openxava.annotations.Stereotype;
 import org.openxava.calculators.CurrentDateCalculator;
 
 import lombok.Getter;
 import lombok.Setter;
+import s2.gestion.actions.ventas.OnChangeClienteDocumentoVenta;
 import s2.gestion.model.base.Documentable;
 
 @MappedSuperclass
@@ -41,38 +43,43 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_cliente"))
     @DescriptionsList(descriptionProperties="nombre, nif", forTabs="NONE")
+    @OnChange(value=OnChangeClienteDocumentoVenta.class)
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_forma_pago"), columnDefinition="UUID")
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_forma_pago"))
     @DescriptionsList(descriptionProperties="codigo, nombre", forTabs="NONE")    
     private FormaPagoVenta formaPago;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
+    @DescriptionsList(descriptionProperties="nombre", forTabs="NONE")    
+    private TarifaVenta tarifaVenta;
     
     public abstract List<T> getLineasDetalles();
     public abstract void setLineasDetalles(List<T> lineasDetalles);
     
     //@Depends("lineasDetalles")
     @Stereotype("MONEY")
-    public BigDecimal getTotal(){
+    public BigDecimal getTotalSinIva(){
 	BigDecimal total=BigDecimal.ZERO;
 	for (T detalle : getLineasDetalles()) {
-	    total=total.add(detalle.getTotal());
-	}
-	return total;
-    }
-    
-    @Stereotype("MONEY")
-    public BigDecimal getTotalConIva(){
-	BigDecimal total=BigDecimal.ZERO;
-	for (T detalle : getLineasDetalles()) {
-	    total=total.add(detalle.getTotalConIva());
+	    total=total.add(detalle.getImporte());
 	}
 	return total;
     }
     
     @Stereotype("MONEY")
     public BigDecimal getImporteIva(){
-	return getTotalConIva().subtract(getTotal());
+	BigDecimal total=BigDecimal.ZERO;
+	for (T detalle : getLineasDetalles()) {
+	    total=total.add(detalle.getImporteIva());
+	}
+	return total;
+    }
+    
+    @Stereotype("MONEY")
+    public BigDecimal getTotalConIva(){
+	return getTotalSinIva().add(getImporteIva());
     }
 }
