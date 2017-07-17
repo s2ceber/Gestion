@@ -18,6 +18,7 @@ import lombok.Setter;
 import s2.gestion.actions.ficheros.OnChangeArticuloDocumentoDetalleBaseAction;
 import s2.gestion.model.base.Documentable;
 import s2.gestion.model.ficheros.Articulo;
+import s2.gestion.util.Util;
 
 /**
  * @author Alberto Modelo para los detalles de los documentos de venta
@@ -55,23 +56,23 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
 
     private BigDecimal importe;
 
-    
+
     public void calculo() {
 	if (getPrecio() == null)
-	    setPrecio(BigDecimal.ZERO);
+	    setPrecio(Util.ZERO);
 	if (getUnidades() == null)
-	    setUnidades(BigDecimal.ZERO);
+	    setUnidades(Util.ZERO);
 	BigDecimal subTotal = getPrecio().multiply(getUnidades());
 
-	BigDecimal d1 = dto1 == null ? BigDecimal.ZERO : subTotal.multiply(dto1);
-	BigDecimal d2 = dto2 == null ? BigDecimal.ZERO : subTotal.multiply(dto2);
-	BigDecimal d3 = dto3 == null ? BigDecimal.ZERO : subTotal.multiply(dto3);
-	BigDecimal d4 = dto4 == null ? BigDecimal.ZERO : subTotal.multiply(dto4);
+	BigDecimal d1 = dto1 == null ? Util.ZERO : subTotal.multiply(dto1);
+	BigDecimal d2 = dto2 == null ? Util.ZERO : subTotal.multiply(dto2);
+	BigDecimal d3 = dto3 == null ? Util.ZERO : subTotal.multiply(dto3);
+	BigDecimal d4 = dto4 == null ? Util.ZERO : subTotal.multiply(dto4);
 
 	subTotal.subtract(d1).subtract(d2).subtract(d3).subtract(d4);
 	
 	if (getIvaIncluido()){
-	    subTotal.divide(BigDecimal.ONE.add(getTipoIva()));
+	    subTotal.divide(Util.ONE.add(tipoIva),Util.getNumeroDecimales(), Util.DEFAULT_ROUNDING_MODE );
 	}
 	setImporte(subTotal);
 	setImporteIva(subTotal.multiply(getTipoIva()));

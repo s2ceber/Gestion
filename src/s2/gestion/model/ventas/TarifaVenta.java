@@ -1,9 +1,13 @@
 package s2.gestion.model.ventas;
 
+import java.util.Collection;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.openxava.annotations.Tab;
@@ -28,5 +32,8 @@ public @Getter @Setter class TarifaVenta extends Documentable{
     private String nombre;
     
     private Boolean ivaIncluido;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="tarifaVenta")
+    private Collection<TarifaPrecio> tarifaPrecios;
 
 }

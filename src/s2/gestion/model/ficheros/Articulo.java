@@ -35,12 +35,12 @@ import s2.gestion.model.ventas.TarifaPrecio;
 @Table(name = "articulo")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_entidad")
-@View(members = "codigo, nombre; precio, tipoIva;nota; tarifaPrecios")
-@Tab(properties="codigo, nombre, precio, tipoIva.tipo, nota")
+@View(members = "codigo, nombre; precioCompra, tipoIva;nota; tarifaPrecios")
+@Tab(properties="codigo, nombre, precioCompra, tipoIva.tipo, nota")
 public @Getter @Setter class Articulo extends Documentable {
     private String codigo;
     private String nombre;
-    private BigDecimal precio;
+    private BigDecimal precioCompra;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tipo_iva"))

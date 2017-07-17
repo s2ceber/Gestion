@@ -64,7 +64,7 @@ public @Getter @Setter class TarifaPrecio extends Identificable {
 	if (tarifaPreciosBD.isEmpty()) {
 	    createTarifasPrecio(articulo, tarifas);
 	} else if (tarifaPreciosBD.size() != tarifas.size()) {
-	    String JPQL1 = "select tv from TarifaPrecio tp right join tp.tarifaVenta tv where tp.articulo=:articulo and tv.id is null";
+	    String JPQL1 = "select tv from TarifaVenta tv where tv.id not in (select tp.id from TarifaPrecio tp where tp.articulo=:articulo)";
 	    tarifas = XPersistence.getManager().createQuery(JPQL1, TarifaVenta.class).setParameter("articulo", articulo)
 		    .getResultList();
 	    createTarifasPrecio(articulo, tarifas);
