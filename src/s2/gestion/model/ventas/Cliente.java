@@ -39,7 +39,7 @@ import s2.gestion.model.base.Documentable;
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_cliente")
 @Views({ 
-    @View(members = "#nombre, nif; contacto; direccion; tarifaVenta; contactos{contactos} direcciones{direcciones} otros{documentos; nota}") 
+    @View(members = "#nombre, nif; contacto; direccion; tarifaVenta, formaPago; contactos{contactos} direcciones{direcciones} otros{documentos; nota}") 
  })
 public @Getter @Setter class Cliente extends Documentable {
     private String nombre;
@@ -58,6 +58,11 @@ public @Getter @Setter class Cliente extends Documentable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
     @DescriptionsList(descriptionProperties = "nombre, nota")
     private TarifaVenta tarifaVenta;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_forma_pago"))
+    @DescriptionsList(descriptionProperties = "codigo, nombre")
+    private FormaPagoVenta formaPago;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
     @AsEmbedded

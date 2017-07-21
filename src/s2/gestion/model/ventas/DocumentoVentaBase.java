@@ -1,6 +1,7 @@
 package s2.gestion.model.ventas;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 /**
  * @author Alberto
  * Modelo para la cabecera de los documentos de venta
@@ -14,6 +15,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.DescriptionsList;
@@ -82,4 +84,45 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     public BigDecimal getTotalConIva(){
 	return getTotalSinIva().add(getImporteIva());
     }
+    
+    public boolean isTraspasado(){
+	for (T detalle : getLineasDetalles()) {
+	    if (!detalle.isTraspasoCompleto())
+		return false;
+	}
+	return true;
+    }
+    
+    public List<T> getDetallesNoTraspasados(){
+	List<T> detalles=new ArrayList<>();
+	for(T detalle:getLineasDetalles()){
+	    if (!detalle.isTraspasoCompleto()){
+		detalles.add(detalle);
+	    }
+	}
+	return detalles;
+    }
+    
+    public static enum DocumentoType {
+	PRESUPUESTO, PEDIDO, ALBARAN, FACTURA
+    }
+
+    @Transient
+    private DocumentoType traspasarA;
+
+    public void traspasar(DocumentoType documentoType){
+	
+    }
+
+    public void aprobarEnPedido(){
+
+	
+    }
+    public void copiarLineaDetalle(DocumentoVentaDetalleBase origen, DocumentoVentaDetalleBase destino){
+	destino.setArticulo(origen.getArticulo());
+	destino.setCodigo(origen.getCodigo());
+	destino.setDto1(origen.getDto1());
+	
+    }
+
 }

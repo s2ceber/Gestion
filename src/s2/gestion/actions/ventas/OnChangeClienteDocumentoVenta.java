@@ -20,7 +20,9 @@ public class OnChangeClienteDocumentoVenta extends OnChangePropertyBaseAction {
 	Map<String, Object> mapIdCliente = new HashMap<>();
 	mapIdCliente.put("id", cliente.getTarifaVenta().getId());
 	getView().setValueNotifying("tarifaVenta", mapIdCliente);
-
+	
+	mapIdCliente.put("id", cliente.getFormaPago().getId());
+	getView().setValueNotifying("formaPago", mapIdCliente);
     }
 
 }

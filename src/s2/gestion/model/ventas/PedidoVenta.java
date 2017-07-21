@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
+import org.openxava.jpa.XPersistence;
 
 /**
  * @author Alberto
@@ -39,4 +40,24 @@ public class PedidoVenta extends DocumentoVentaBase<PedidoVentaDetalle> {
         this.lineasDetalles = lineasDetalles;
     }
 
+    public void traspasar(PresupuestoVenta origen){ //TODO será mejor médoto estático
+	if (origen.isTraspasado()) return;
+	PedidoVenta pv=new PedidoVenta();
+	
+	pv.setCliente(origen.getCliente());
+	pv.setDocumentos(origen.getDocumentos());
+	pv.setFecha(new java.util.Date());
+	pv.setFormaPago(origen.getFormaPago());
+	pv.setNota(origen.getNota());
+//	pv.setNumero(numero);
+	pv.setSerieDocumento(origen.getSerieDocumento());
+	pv.setTarifaVenta(origen.getTarifaVenta());
+	for (PresupuestoVentaDetalle detalleOrigen : origen.getDetallesNoTraspasados()) {
+	    PedidoVentaDetalle pvd=new PedidoVentaDetalle();
+	    pvd.traspasar(detalleOrigen);
+	    pvd.setPedidoVenta(this);
+	    getLineasDetalles().add(pvd);
+	}
+	XPersistence.getManager().persist(this);
+    }
 }
