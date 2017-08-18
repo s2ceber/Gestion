@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Alberto
  * Modelo para la cabecera de los albaranes de venta
@@ -24,20 +27,10 @@ import org.openxava.annotations.ListProperties;
 @Table(name = "albaran_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
-public class AlbaranVenta extends DocumentoVentaBase<AlbaranVentaDetalle>{
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="albaranVenta", cascade = CascadeType.REMOVE)
-    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importe[albaranVenta.total, albaranVenta.importeIva, albaranVenta.totalConIva]")
+public @Getter @Setter class AlbaranVenta extends DocumentoVentaBase<AlbaranVenta, AlbaranVentaDetalle>{
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
+    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")
     @AsEmbedded()
     @OrderColumn
-    private List<AlbaranVentaDetalle> lineasDetalles;
-
-    @Override
-    public List<AlbaranVentaDetalle> getLineasDetalles() {
-        return lineasDetalles;
-    }
-    @Override
-    public void setLineasDetalles(List<AlbaranVentaDetalle> lineasDetalles) {
-        this.lineasDetalles = lineasDetalles;
-    }
-
+    private List<AlbaranVentaDetalle> detalles;
 }

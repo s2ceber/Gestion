@@ -10,18 +10,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Transient;
 
+import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.DescriptionsList;
+import org.openxava.annotations.EditOnly;
+import org.openxava.annotations.ListProperties;
+import org.openxava.annotations.NoCreate;
 import org.openxava.annotations.OnChange;
 import org.openxava.annotations.Stereotype;
 import org.openxava.calculators.CurrentDateCalculator;
+import org.openxava.jpa.XPersistence;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +40,8 @@ import s2.gestion.model.base.Documentable;
 @MappedSuperclass
 // @Table(name = "documento_venta")
 public @Getter @Setter
-abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends Documentable {
+abstract class DocumentoVentaBase<M extends DocumentoVentaBase<M,D>, D extends DocumentoVentaDetalleBase<M,D>> extends Documentable  {
+   
     private Integer numero;
     
     @ManyToOne(fetch=FetchType.LAZY)
@@ -57,15 +67,22 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
     @DescriptionsList(descriptionProperties="nombre", forTabs="NONE")    
     private TarifaVenta tarifaVenta;
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
+//    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")
+//    @AsEmbedded()
+//    @OrderColumn
+//    private List<D> detalles;
     
-    public abstract List<T> getLineasDetalles();
-    public abstract void setLineasDetalles(List<T> lineasDetalles);
+    public abstract List<D> getDetalles();
+    public abstract void setDetalles(List<D> detalles);
+    
     
     //@Depends("lineasDetalles")
     @Stereotype("MONEY")
     public BigDecimal getTotalSinIva(){
 	BigDecimal total=BigDecimal.ZERO;
-	for (T detalle : getLineasDetalles()) {
+	for (D detalle : getDetalles()) {
 	    total=total.add(detalle.getImporte());
 	}
 	return total;
@@ -74,7 +91,7 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     @Stereotype("MONEY")
     public BigDecimal getImporteIva(){
 	BigDecimal total=BigDecimal.ZERO;
-	for (T detalle : getLineasDetalles()) {
+	for (D detalle : getDetalles()) {
 	    total=total.add(detalle.getImporteIva());
 	}
 	return total;
@@ -86,43 +103,51 @@ abstract class DocumentoVentaBase<T extends DocumentoVentaDetalleBase> extends D
     }
     
     public boolean isTraspasado(){
-	for (T detalle : getLineasDetalles()) {
+	for (D detalle : getDetalles()) {
 	    if (!detalle.isTraspasoCompleto())
 		return false;
 	}
 	return true;
     }
     
-    public List<T> getDetallesNoTraspasados(){
-	List<T> detalles=new ArrayList<>();
-	for(T detalle:getLineasDetalles()){
+    @ListProperties("codigo, nombre,unidades, precio, importeLinea, unidadesPendientesTraspaso, unidadesATraspasar")
+    @ElementCollection
+    @EditOnly
+    public List<D> getDetallesNoTraspasados(){
+	List<D> detalles=new ArrayList<>();
+	for(D detalle:getDetalles()){
 	    if (!detalle.isTraspasoCompleto()){
 		detalles.add(detalle);
 	    }
 	}
 	return detalles;
     }
-    
-    public static enum DocumentoType {
-	PRESUPUESTO, PEDIDO, ALBARAN, FACTURA
-    }
 
     @Transient
     private DocumentoType traspasarA;
 
-    public void traspasar(DocumentoType documentoType){
+    public <T extends DocumentoVentaBase<T,U>, U extends DocumentoVentaDetalleBase<T,U>> T traspasar(DocumentoType type){
+	if (this.isTraspasado()) return null;
 	
-    }
+	T destino = DocumentoVentaFactory.getDocumento(type);
+	destino.setCliente(getCliente());
+	destino.setDocumentos(this.getDocumentos());
+	destino.setFecha(new java.util.Date());
+	destino.setFormaPago(this.getFormaPago());
+	destino.setNota(this.getNota());
+	// pv.setNumero(numero);
+	destino.setSerieDocumento(this.getSerieDocumento());
+	destino.setTarifaVenta(this.getTarifaVenta());
 
-    public void aprobarEnPedido(){
-
+	for (D detalleOrigen : this.getDetallesNoTraspasados()) {
+	    U detalleDestino = DocumentoVentaFactory.getDetalle(type);
+	    detalleOrigen.traspasar(detalleDestino);
+	    detalleDestino.setMaestro(destino);
+	    XPersistence.getManager().persist(detalleDestino);
+	    destino.getDetalles().add(detalleDestino);
+	}
 	
+	XPersistence.getManager().persist(destino);
+	return destino;
     }
-    public void copiarLineaDetalle(DocumentoVentaDetalleBase origen, DocumentoVentaDetalleBase destino){
-	destino.setArticulo(origen.getArticulo());
-	destino.setCodigo(origen.getCodigo());
-	destino.setDto1(origen.getDto1());
-	
-    }
-
 }

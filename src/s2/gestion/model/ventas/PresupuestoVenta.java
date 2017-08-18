@@ -28,13 +28,13 @@ import lombok.Setter;
 @Table(name = "presupuesto_venta")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_entidad")
-@View(members = "serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{lineasDetalles} otrosDatos{documentos;nota} aprobar{aprobarA}")
+@View(members = "serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{detalles} otrosDatos{documentos;nota} traspasar{traspasarA; detallesNoTraspasados}")
 @Tab(properties = "serieDocumento.nombre, numero, fecha, cliente.nombre, cliente.nif, totalSinIva, importeIva, totalConIva")
-public @Getter @Setter class PresupuestoVenta extends DocumentoVentaBase<PresupuestoVentaDetalle> {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "presupuestoVenta", cascade = CascadeType.REMOVE)
-    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importe[presupuestoVenta.totalSinIva, presupuestoVenta.importeIva, presupuestoVenta.totalConIva]")
+public @Getter @Setter class PresupuestoVenta extends DocumentoVentaBase<PresupuestoVenta, PresupuestoVentaDetalle>{
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
+    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")
     @AsEmbedded()
     @OrderColumn
-    private List<PresupuestoVentaDetalle> lineasDetalles;
+    private List<PresupuestoVentaDetalle> detalles;
     
 }

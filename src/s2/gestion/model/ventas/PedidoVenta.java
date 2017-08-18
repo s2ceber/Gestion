@@ -14,7 +14,9 @@ import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
-import org.openxava.jpa.XPersistence;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Alberto
@@ -25,39 +27,10 @@ import org.openxava.jpa.XPersistence;
 @Table(name = "pedido_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
-public class PedidoVenta extends DocumentoVentaBase<PedidoVentaDetalle> {
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="pedidoVenta", cascade = CascadeType.REMOVE)
-    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importe[pedidoVenta.total, pedidoVenta.importeIva, pedidoVenta.totalConIva]")
+public @Getter @Setter class PedidoVenta extends DocumentoVentaBase<PedidoVenta, PedidoVentaDetalle>{
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
+    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")
     @AsEmbedded()
     @OrderColumn
-    private List<PedidoVentaDetalle> lineasDetalles;
-
-    public List<PedidoVentaDetalle> getLineasDetalles() {
-        return lineasDetalles;
-    }
-
-    public void setLineasDetalles(List<PedidoVentaDetalle> lineasDetalles) {
-        this.lineasDetalles = lineasDetalles;
-    }
-
-    public void traspasar(PresupuestoVenta origen){ //TODO será mejor médoto estático
-	if (origen.isTraspasado()) return;
-	PedidoVenta pv=new PedidoVenta();
-	
-	pv.setCliente(origen.getCliente());
-	pv.setDocumentos(origen.getDocumentos());
-	pv.setFecha(new java.util.Date());
-	pv.setFormaPago(origen.getFormaPago());
-	pv.setNota(origen.getNota());
-//	pv.setNumero(numero);
-	pv.setSerieDocumento(origen.getSerieDocumento());
-	pv.setTarifaVenta(origen.getTarifaVenta());
-	for (PresupuestoVentaDetalle detalleOrigen : origen.getDetallesNoTraspasados()) {
-	    PedidoVentaDetalle pvd=new PedidoVentaDetalle();
-	    pvd.traspasar(detalleOrigen);
-	    pvd.setPedidoVenta(this);
-	    getLineasDetalles().add(pvd);
-	}
-	XPersistence.getManager().persist(this);
-    }
+    private List<PedidoVentaDetalle> detalles;
 }

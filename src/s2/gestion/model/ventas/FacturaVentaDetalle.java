@@ -19,9 +19,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "factura_venta_detalle")
 @View(members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea ")
-public @Getter @Setter class FacturaVentaDetalle extends DocumentoVentaDetalleBase {
+public @Getter @Setter class FacturaVentaDetalle extends DocumentoVentaDetalleBase<FacturaVenta, FacturaVentaDetalle> {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_factura_venta"))
-    private FacturaVenta facturaVenta;
-   
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_factura"))
+    private FacturaVenta maestro;
+
 }

@@ -8,21 +8,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.openxava.annotations.View;
+import org.openxava.annotations.Views;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Alberto
- * Modelo para los detalles de los presupuestos de venta
+ * @author Alberto Modelo para los detalles de los presupuestos de venta
  *
  */
 @Entity
 @Table(name = "presupuesto_venta_detalle")
-@View(members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea ")
-public @Getter @Setter class PresupuestoVentaDetalle extends DocumentoVentaDetalleBase{
+@Views({
+@View(members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea, unidadesPendientesTraspaso, unidadesATraspasar"),
+@View(name="detalle", members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea")
+})
+public @Getter @Setter class PresupuestoVentaDetalle
+	extends DocumentoVentaDetalleBase<PresupuestoVenta, PresupuestoVentaDetalle> {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_presupuesto_venta"))
-    private PresupuestoVenta presupuestoVenta;
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_presupuesto"))
+    private PresupuestoVenta maestro;
 
 }

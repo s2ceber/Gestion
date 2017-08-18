@@ -1,23 +1,23 @@
 package s2.gestion.model.ventas;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.openxava.annotations.Depends;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.OnChange;
 import org.openxava.annotations.Stereotype;
+import org.openxava.jpa.XPersistence;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +30,10 @@ import s2.gestion.util.Util;
  * @author Alberto Modelo para los detalles de los documentos de venta
  *
  */
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "documento_venta_detalle")
-@DiscriminatorColumn(name = "tipo_entidad")
-public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Documentable {
+@MappedSuperclass
+public abstract @Getter @Setter class DocumentoVentaDetalleBase<M extends DocumentoVentaBase<M, D>, D extends DocumentoVentaDetalleBase<M,D>> extends Documentable  {
+    public abstract void setMaestro(M maestro);
+    
     private String codigo;
     private BigDecimal dto1;
     private BigDecimal dto2;
@@ -48,6 +47,8 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     private BigDecimal unidades;
     @Stereotype("MONEY")
     private BigDecimal precio;
+    @Transient
+    private BigDecimal unidadesATraspasar;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_articulo"))
@@ -55,18 +56,13 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
     @OnChange(value = OnChangeArticuloDocumentoDetalleBaseAction.class)
     private Articulo articulo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "origen")
-    private Collection<DocumentoVentaDetalleBase> destinos;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_origen"))
-    private DocumentoVentaDetalleBase origen;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tarifa_venta"))
     @DescriptionsList(descriptionProperties = "nombre, nota")
     private TarifaVenta tarifaVenta;
 
+    private OrigenTraspaso origenTraspaso;
+        
     public void calculo() {
 	if (getPrecio() == null)
 	    setPrecio(Util.ZERO);
@@ -96,10 +92,36 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
 
     public BigDecimal getUnidadesTraspasadas() {
 	BigDecimal unidades = Util.ZERO;
-	for (DocumentoVentaDetalleBase destino : getDestinos()) {
+	for (DocumentoVentaDetalleBase<?, ?> destino : getDestinos()) {
 	    unidades = unidades.add(destino.getUnidades());
 	}
 	return unidades;
+    }
+
+    
+    private List<? extends DocumentoVentaDetalleBase<?, ?>> getDestinos() {
+	List resultList= new ArrayList<>();
+	if (getId()==null) return resultList;
+	resultList = getDestinos(PedidoVentaDetalle.class);
+	resultList.addAll(getDestinos(AlbaranVentaDetalle.class));
+	resultList.addAll(getDestinos(FacturaVentaDetalle.class));
+	return resultList;
+    }
+    
+    private List<? extends DocumentoVentaDetalleBase<?, ?>>  getDestinos(Class<? extends DocumentoVentaDetalleBase<?, ?>> clazz) {
+	List<? extends DocumentoVentaDetalleBase<?, ?>> resultList=new ArrayList<>();
+	if (getOrigenTraspaso()==null) return resultList;
+	
+	String name=clazz.getAnnotation(Table.class).name();
+	DocumentoType type = getOrigenTraspaso().getDocumentoType();
+	Long id = origenTraspaso.getIdOrigen();
+	String jpql = "from " + name + " d where d.origenTraspaso.documentoType=:type and d.origenTraspaso.idOrigen=:id";
+	resultList = XPersistence.getManager()
+		.createQuery(jpql, clazz)
+		.setParameter("type", type)
+		.setParameter("id", id)
+		.getResultList();
+	return resultList;
     }
 
     public boolean isTraspasoCompleto() {
@@ -115,29 +137,33 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase extends Document
 	else
 	    return false;
     }
-    public void traspasar(DocumentoVentaDetalleBase origen){
-	if (origen.isTraspasoCompleto()) return;
-	setArticulo(origen.getArticulo());
-	setCodigo(origen.getCodigo());
-	setDto1(origen.getDto1());
-	setDto2(origen.getDto2());
-	setDto3(origen.getDto3());
-	setDto4(origen.getDto4());
-	setImporte(origen.getImporte());
-	setImporteIva(origen.getImporteIva());
-	setIvaIncluido(origen.getIvaIncluido());
-	setNombre(origen.getNombre());
-	setNota(origen.getNota());
-	setPrecio(origen.getPrecio());
-	setTarifaVenta(origen.getTarifaVenta());
-	setTipoIva(origen.getTipoIva());
-	setUnidades(origen.getUnidades());
+
+    public void traspasar(DocumentoVentaDetalleBase<?, ?> destino) {
+	if (isTraspasoCompleto())
+	    return;
+	destino.setArticulo(getArticulo());
+	destino.setCodigo(getCodigo());
+	destino.setDto1(getDto1());
+	destino.setDto2(getDto2());
+	destino.setDto3(getDto3());
+	destino.setDto4(getDto4());
+	destino.setImporte(getImporte());
+	destino.setImporteIva(getImporteIva());
+	destino.setIvaIncluido(getIvaIncluido());
+	destino.setNombre(getNombre());
+	destino.setNota(getNota());
+	destino.setPrecio(getPrecio());
+	destino.setTarifaVenta(getTarifaVenta());
+	destino.setTipoIva(getTipoIva());
+	destino.setUnidades(getUnidades());
     }
-    public BigDecimal getUnidadesPendientesTraspaso(){
+
+    public BigDecimal getUnidadesPendientesTraspaso() {
 	return getUnidades().subtract(getUnidadesTraspasadas());
     }
+
     public void setIvaIncluido(Boolean ivaIncluido) {
-	this.ivaIncluido = ivaIncluido==null?false:ivaIncluido;
+	this.ivaIncluido = ivaIncluido == null ? false : ivaIncluido;
     }
 
     public BigDecimal getDto1() {

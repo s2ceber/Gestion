@@ -19,6 +19,9 @@ import org.openxava.annotations.ListProperties;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 
+import lombok.Getter;
+import lombok.Setter;
+
 
 /**
  * @author Alberto
@@ -29,20 +32,19 @@ import org.openxava.annotations.View;
 @Table(name = "factura_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
-@View(members="serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{lineasDetalles} impuestos{ivas}otrosDatos{documentos;nota}")
+@View(members="serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{detalles} impuestos{ivas}otrosDatos{documentos;nota}")
 @Tab(properties="serieDocumento.nombre, numero, fecha, cliente.nombre, cliente.nif, totalSinIva, importeIva, totalConIva")
-public class FacturaVenta extends DocumentoVentaBase<FacturaVentaDetalle>{
-
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="facturaVenta", cascade = CascadeType.REMOVE)
-    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[facturaVenta.totalSinIva, facturaVenta.importeIva, facturaVenta.totalConIva]")
+public @Getter @Setter class FacturaVenta extends DocumentoVentaBase<FacturaVenta, FacturaVentaDetalle>{  
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
+    @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")
     @AsEmbedded()
     @OrderColumn
-    private List<FacturaVentaDetalle> lineasDetalles;
-
+    private List<FacturaVentaDetalle> detalles;
+    
     
     public Collection<Impuesto> getIvas(){
 	Collection<Impuesto> impuestos=new ArrayList<>();
-	for (FacturaVentaDetalle facturaVentaDetalle : getLineasDetalles()) {
+	for (FacturaVentaDetalle facturaVentaDetalle : getDetalles()) {
 	    boolean existe=false;
 	    for(Impuesto impuesto:impuestos){
 		if (facturaVentaDetalle.getTipoIva().compareTo(impuesto.getTipo())==0){
@@ -60,12 +62,5 @@ public class FacturaVenta extends DocumentoVentaBase<FacturaVentaDetalle>{
 	}
 	return impuestos;
     }
-    @Override
-    public List<FacturaVentaDetalle> getLineasDetalles() {
-        return lineasDetalles;
-    }
-    @Override
-    public void setLineasDetalles(List<FacturaVentaDetalle> lineasDetalles) {
-        this.lineasDetalles = lineasDetalles;
-    }
+
 }

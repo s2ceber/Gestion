@@ -110,4 +110,5 @@
 			class="s2.gestion.actions.ficheros.ActualizarTarifas">
 		</action>
 	</controller>
+	
 </controllers>
