@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.openxava.annotations.ReadOnly;
 import org.openxava.annotations.View;
 
 import lombok.Getter;
@@ -24,5 +25,13 @@ public @Getter @Setter class PreguntaCliente extends Identificable {
     private Boolean respuesta;
 
     private String observacion;
+    
+    @ReadOnly
+    public String getTexto(){
+	if (plantillaPregunta!=null)
+	return plantillaPregunta.getTexto();
+	
+	return null;
+    }
 
 }

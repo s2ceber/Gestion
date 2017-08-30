@@ -14,6 +14,8 @@ import javax.persistence.Table;
 
 import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.ListProperties;
+import org.openxava.annotations.Tab;
+import org.openxava.annotations.View;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,8 @@ import lombok.Setter;
 @Table(name = "pedido_venta")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="tipo_entidad")
+@View(members = "serieDocumento, numero, fecha, cliente, tarifaVenta, formaPago;articulos{detalles} otrosDatos{documentos;nota} traspasar{traspasarA,DocumentoVenta.traspasar(); detallesNoTraspasados}")
+@Tab(properties = "serieDocumento.nombre, numero, fecha, cliente.nombre, cliente.nif, totalSinIva, importeIva, totalConIva")
 public @Getter @Setter class PedidoVenta extends DocumentoVentaBase<PedidoVenta, PedidoVentaDetalle>{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "maestro", cascade = CascadeType.REMOVE)
     @ListProperties("codigo, nombre,unidades,tipoIva, precio, dto1, dto2, dto3, dto4, importeLinea[maestro.totalSinIva, maestro.importeIva, maestro.totalConIva]")

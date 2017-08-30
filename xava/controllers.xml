@@ -51,12 +51,14 @@
 		<action name="deleteSelected" mode="NONE" hidden="true" />
 		<action name="deleteRow" mode="NONE" hidden="true" />
 	</controller>
+	
 	<controller name="NewEjercicio">
 		<extends controller="Navigation" />
 
 		<action name="crearEjercicio" by-default="almost-always"
 			class="s2.gestion.actions.ficheros.ejercicio.CreateEjercicioAction"></action>
 	</controller>
+	
 	<controller name="DeleteEjercicio">
 		<action name="delete" mode="detail" confirm="true"
 			class="s2.gestion.actions.ficheros.ejercicio.DeleteEjercicioAction">
@@ -105,10 +107,14 @@
 			<set value="PENDIENTES" property="tipoFiltro" />
 		</action>
 	</controller>
+	
 	<controller name="ArticuloPrecio">
 		<action name="actualizarTarifas"
 			class="s2.gestion.actions.ficheros.ActualizarTarifas">
 		</action>
 	</controller>
 	
+	<controller name="DocumentoVenta">
+		<action name="traspasar" class="s2.gestion.actions.ventas.TraspasarAction" hidden="true"></action>
+	</controller>
 </controllers>

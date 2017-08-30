@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "presupuesto_venta_detalle")
 @Views({
-@View(members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea, unidadesPendientesTraspaso, unidadesATraspasar"),
+@View(members = "id, articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea, unidadesPendientesTraspaso, unidadesATraspasar"),
 @View(name="detalle", members = "articulo, codigo,nombre; precio, tipoIva, ivaIncluido, unidades; dto1, dto2, dto3, dto4; importeLinea")
 })
 public @Getter @Setter class PresupuestoVentaDetalle

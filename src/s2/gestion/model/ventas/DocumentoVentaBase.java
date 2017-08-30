@@ -10,23 +10,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Transient;
 
-import org.openxava.annotations.AsEmbedded;
 import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.EditOnly;
 import org.openxava.annotations.ListProperties;
-import org.openxava.annotations.NoCreate;
 import org.openxava.annotations.OnChange;
 import org.openxava.annotations.Stereotype;
 import org.openxava.calculators.CurrentDateCalculator;
@@ -110,17 +105,20 @@ abstract class DocumentoVentaBase<M extends DocumentoVentaBase<M,D>, D extends D
 	return true;
     }
     
-    @ListProperties("codigo, nombre,unidades, precio, importeLinea, unidadesPendientesTraspaso, unidadesATraspasar")
+    @ListProperties("id, codigo, nombre,unidades, precio, importeLinea, unidadesPendientesTraspaso, unidadesATraspasar")
     @ElementCollection
     @EditOnly
+    @Transient
+    private List<D> detallesNoTraspasados;
+    
     public List<D> getDetallesNoTraspasados(){
-	List<D> detalles=new ArrayList<>();
+	detallesNoTraspasados=new ArrayList<>();
 	for(D detalle:getDetalles()){
 	    if (!detalle.isTraspasoCompleto()){
-		detalles.add(detalle);
+		detallesNoTraspasados.add(detalle);
 	    }
 	}
-	return detalles;
+	return detallesNoTraspasados;
     }
 
     @Transient
@@ -141,8 +139,13 @@ abstract class DocumentoVentaBase<M extends DocumentoVentaBase<M,D>, D extends D
 
 	for (D detalleOrigen : this.getDetallesNoTraspasados()) {
 	    U detalleDestino = DocumentoVentaFactory.getDetalle(type);
-	    detalleOrigen.traspasar(detalleDestino);
+	    OrigenTraspaso ot =new OrigenTraspaso();
+	    ot.setDocumentoType(DocumentoType.get(this));
+	    detalleDestino.setOrigenTraspaso(ot);
 	    detalleDestino.setMaestro(destino);
+	    
+	    detalleOrigen.traspasar(detalleDestino);
+	    
 	    XPersistence.getManager().persist(detalleDestino);
 	    destino.getDetalles().add(detalleDestino);
 	}

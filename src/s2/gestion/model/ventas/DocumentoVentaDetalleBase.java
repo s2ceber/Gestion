@@ -33,6 +33,7 @@ import s2.gestion.util.Util;
 @MappedSuperclass
 public abstract @Getter @Setter class DocumentoVentaDetalleBase<M extends DocumentoVentaBase<M, D>, D extends DocumentoVentaDetalleBase<M,D>> extends Documentable  {
     public abstract void setMaestro(M maestro);
+    public abstract M getMaestro();
     
     private String codigo;
     private BigDecimal dto1;
@@ -110,11 +111,11 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase<M extends Docume
     
     private List<? extends DocumentoVentaDetalleBase<?, ?>>  getDestinos(Class<? extends DocumentoVentaDetalleBase<?, ?>> clazz) {
 	List<? extends DocumentoVentaDetalleBase<?, ?>> resultList=new ArrayList<>();
-	if (getOrigenTraspaso()==null) return resultList;
+	if (getMaestro()==null || getId()==null) return resultList;
 	
-	String name=clazz.getAnnotation(Table.class).name();
-	DocumentoType type = getOrigenTraspaso().getDocumentoType();
-	Long id = origenTraspaso.getIdOrigen();
+	String name=clazz.getCanonicalName();
+	DocumentoType type = DocumentoType.get(getMaestro());
+	Long id = getId();
 	String jpql = "from " + name + " d where d.origenTraspaso.documentoType=:type and d.origenTraspaso.idOrigen=:id";
 	resultList = XPersistence.getManager()
 		.createQuery(jpql, clazz)
@@ -155,7 +156,8 @@ public abstract @Getter @Setter class DocumentoVentaDetalleBase<M extends Docume
 	destino.setPrecio(getPrecio());
 	destino.setTarifaVenta(getTarifaVenta());
 	destino.setTipoIva(getTipoIva());
-	destino.setUnidades(getUnidades());
+	destino.setUnidades(getUnidadesATraspasar());
+	destino.getOrigenTraspaso().setIdOrigen(getId());
     }
 
     public BigDecimal getUnidadesPendientesTraspaso() {
